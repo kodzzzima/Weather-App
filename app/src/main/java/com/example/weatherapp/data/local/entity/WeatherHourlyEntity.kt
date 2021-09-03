@@ -10,10 +10,9 @@ data class WeatherHourlyEntity(
 
     @PrimaryKey
     var id: Int? = 0,
-//    val hourly: List<Hourly>? = null,
-    val lat: Double? = null,
-    val lon: Double? = null,
-    val timezone: String? = null,
+    var dt: Int? = null,
+    var icon: String? = null,
+    var temp: Double? = null,
 ) {
     companion object {
         const val TABLE_NAME = "weather_hourly"

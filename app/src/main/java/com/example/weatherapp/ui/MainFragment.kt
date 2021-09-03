@@ -11,7 +11,6 @@ import androidx.viewbinding.ViewBinding
 import com.example.weatherapp.core.BindingFragment
 import com.example.weatherapp.databinding.FragmentMainBinding
 import com.example.weatherapp.ui.adapters.ForecastAdapter
-import com.example.weatherapp.util.Constants
 import com.example.weatherapp.util.State
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
@@ -32,13 +31,10 @@ class MainFragment : BindingFragment<FragmentMainBinding>() {
         super.onViewCreated(view, savedInstanceState)
         setupUI()
         observeAPICall()
-        val lat: String? =
-            mainFragmentViewModel.sharedPreferences.getString(Constants.Coords.LAT, "")
-        Log.d("testLog", "lat = " + lat)
     }
 
     private fun setupUI() {
-        mainFragmentViewModel.fetchWeatherDetailFromDb("Moscow")
+        mainFragmentViewModel.fetchCurrentWeatherFromDb()
         mainFragmentViewModel.fetchHourlyWeatherFromDb()
         mainFragmentViewModel.fetchWeatherDailyFromDb()
         initRecyclerView()
@@ -61,8 +57,33 @@ class MainFragment : BindingFragment<FragmentMainBinding>() {
 
 
     private fun observeAPICall() {
-        mainFragmentViewModel.weatherHourlyLiveData.observe(viewLifecycleOwner, { state ->
+        observeCurrentWeather()
+        observeWeatherDaily()
+        observeWeatherHourly()
+    }
 
+    private fun observeWeatherDaily() {
+        mainFragmentViewModel.weatherDailyLiveData.observe(viewLifecycleOwner,{ state ->
+            when (state) {
+                is State.Loading -> {
+                    Log.d("testLog", "loading---daily")
+                }
+                is State.Success -> {
+                    state.data.let { weatherDaily ->
+                        Log.d("testLog", "success--- daily")
+                        Log.d("testLog", weatherDaily[0].description.toString())
+                    }
+
+                }
+                is State.Error -> {
+                    Log.d("testLog", state.message + "daily")
+                }
+            }
+        })
+    }
+
+    private fun observeWeatherHourly() {
+        mainFragmentViewModel.weatherHourlyLiveData.observe(viewLifecycleOwner, { state ->
             when (state) {
                 is State.Loading -> {
                     Log.d("testLog", "loading---hourly")
@@ -82,27 +103,10 @@ class MainFragment : BindingFragment<FragmentMainBinding>() {
             }
         }
         )
+    }
 
-        mainFragmentViewModel.weatherDailyLiveData.observe(viewLifecycleOwner,{ state ->
-            when (state) {
-                is State.Loading -> {
-                    Log.d("testLog", "loading---daily")
-                }
-                is State.Success -> {
-                    state.data.let { weatherDaily ->
-                        Log.d("testLog", "success--- daily")
-                        Log.d("testLog", weatherDaily[0].description.toString())
-                    }
-
-                }
-                is State.Error -> {
-                    Log.d("testLog", state.message + "daily")
-                }
-            }
-        })
-
-
-        mainFragmentViewModel.weatherLiveData.observe(viewLifecycleOwner, { state ->
+    private fun observeCurrentWeather() {
+        mainFragmentViewModel.currentWeatherLiveData.observe(viewLifecycleOwner, { state ->
             when (state) {
                 is State.Loading -> {
                     Log.d("testLog", "loading---")

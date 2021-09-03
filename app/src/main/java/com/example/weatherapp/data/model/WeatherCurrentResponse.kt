@@ -4,7 +4,7 @@ import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 
 @Keep
-data class WeatherDataResponse(
+data class WeatherCurrentResponse(
     @SerializedName("base")
     val base: String,
     @SerializedName("clouds")

@@ -2,10 +2,10 @@ package com.example.weatherapp.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.weatherapp.data.local.entity.WeatherDetailEntity.Companion.TABLE_NAME
+import com.example.weatherapp.data.local.entity.WeatherCurrentEntity.Companion.TABLE_NAME
 
 @Entity(tableName = TABLE_NAME)
-data class WeatherDetailEntity(
+data class WeatherCurrentEntity(
 
     @PrimaryKey
     var id: Int? = 0,

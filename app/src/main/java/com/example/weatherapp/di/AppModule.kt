@@ -19,8 +19,4 @@ object AppModule {
     @Singleton
     fun provideSharedPreferences(@ApplicationContext context: Context) =
         PreferenceManager.getDefaultSharedPreferences(context)
-
-    @Provides
-    @Singleton
-    fun provideMoshi(): Moshi = Moshi.Builder().build()
 }

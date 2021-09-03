@@ -7,7 +7,7 @@ import com.example.weatherapp.data.local.entity.WeatherHourlyEntity
 import com.example.weatherapp.data.model.WeatherHourlyResponse
 import javax.inject.Inject
 
-class HourlyForecastRepository @Inject constructor(
+class WeatherHourlyRepository @Inject constructor(
     private val api: WeatherApi,
     private val db: WeatherHourlyDao,
 ): SafeApiRequest() {

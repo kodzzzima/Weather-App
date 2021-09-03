@@ -5,7 +5,7 @@ import androidx.room.Room
 import com.example.weatherapp.data.local.dao.WeatherHourlyDao
 import com.example.weatherapp.data.local.WeatherDatabase
 import com.example.weatherapp.data.local.dao.WeatherDailyDao
-import com.example.weatherapp.data.local.dao.WeatherDetailDao
+import com.example.weatherapp.data.local.dao.WeatherCurrentDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,7 +28,7 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideCurrentWeatherDao(db: WeatherDatabase): WeatherDetailDao = db.getWeatherDao()
+    fun provideCurrentWeatherDao(db: WeatherDatabase): WeatherCurrentDao = db.getWeatherDao()
 
     @Provides
     @Singleton

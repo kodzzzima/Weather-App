@@ -1,7 +1,7 @@
 package com.example.weatherapp.data.api
 
 import com.example.weatherapp.data.model.WeatherDailyResponse
-import com.example.weatherapp.data.model.WeatherDataResponse
+import com.example.weatherapp.data.model.WeatherCurrentResponse
 import com.example.weatherapp.data.model.WeatherHourlyResponse
 import com.example.weatherapp.util.Constants
 import retrofit2.Response
@@ -16,7 +16,7 @@ interface WeatherApi {
         @Query("lang") lang: String = Constants.Network.LANGUAGE,
         @Query("units") units: String = Constants.Network.WEATHER_UNIT,
         @Query("appid") appid: String = Constants.Network.WEATHER_API_KEY
-    ): Response<WeatherDataResponse>
+    ): Response<WeatherCurrentResponse>
 
     @GET("onecall")
     suspend fun getCityForecastHourly(

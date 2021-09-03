@@ -10,7 +10,7 @@ import com.example.weatherapp.data.local.entity.WeatherHourlyEntity
 interface WeatherHourlyDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addHourlyForecast(hourlyEntity: WeatherHourlyEntity)
+    suspend fun addWeather(hourlyEntity: WeatherHourlyEntity)
 
     @Query("SELECT * FROM ${WeatherHourlyEntity.TABLE_NAME}")
     suspend fun fetchHourlyForecast(): WeatherHourlyEntity?

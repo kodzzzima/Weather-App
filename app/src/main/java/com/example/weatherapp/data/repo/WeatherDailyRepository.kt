@@ -3,12 +3,8 @@ package com.example.weatherapp.data.repo
 import com.example.weatherapp.data.SafeApiRequest
 import com.example.weatherapp.data.api.WeatherApi
 import com.example.weatherapp.data.local.dao.WeatherDailyDao
-import com.example.weatherapp.data.local.dao.WeatherDetailDao
 import com.example.weatherapp.data.local.entity.WeatherDailyEntity
-import com.example.weatherapp.data.local.entity.WeatherDetailEntity
-import com.example.weatherapp.data.local.entity.WeatherHourlyEntity
 import com.example.weatherapp.data.model.WeatherDailyResponse
-import com.example.weatherapp.data.model.WeatherHourlyResponse
 import javax.inject.Inject
 
 class WeatherDailyRepository @Inject constructor(
@@ -21,7 +17,7 @@ class WeatherDailyRepository @Inject constructor(
     }
 
     suspend fun fetchWeatherDaily(): List<WeatherDailyEntity> =
-        db.fetchDailyWeather()
+        db.getAllWeather()
 
     suspend fun addAllWeather(weatherList: List<WeatherDailyEntity>) {
         db.addAllWeather(weatherList)
