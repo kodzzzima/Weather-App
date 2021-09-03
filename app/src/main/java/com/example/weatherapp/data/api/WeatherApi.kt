@@ -1,7 +1,8 @@
 package com.example.weatherapp.data.api
 
+import com.example.weatherapp.data.model.WeatherDailyResponse
 import com.example.weatherapp.data.model.WeatherDataResponse
-import com.example.weatherapp.data.model.WeatherHourly
+import com.example.weatherapp.data.model.WeatherHourlyResponse
 import com.example.weatherapp.util.Constants
 import retrofit2.Response
 import retrofit2.http.GET
@@ -22,9 +23,18 @@ interface WeatherApi {
         @Query("lat") lat: String,
         @Query("lon") lon: String,
         @Query("lang") lang: String = Constants.Network.LANGUAGE,
-        @Query("exclude") exclude: String = Constants.Network.EXCLUDE,
+        @Query("exclude") exclude: String = Constants.Network.EXCLUDE_FOR_HOURLY,
         @Query("units") units: String = Constants.Network.WEATHER_UNIT,
         @Query("appid") appid: String = Constants.Network.WEATHER_API_KEY
-    ): Response<WeatherHourly>
+    ): Response<WeatherHourlyResponse>
 
+    @GET("onecall")
+    suspend fun getCityWeatherDaily(
+        @Query("lat") lat: String,
+        @Query("lon") lon: String,
+        @Query("lang") lang: String = Constants.Network.LANGUAGE,
+        @Query("exclude") exclude: String = Constants.Network.EXCLUDE_FOR_DAILY,
+        @Query("units") units: String = Constants.Network.WEATHER_UNIT,
+        @Query("appid") appid: String = Constants.Network.WEATHER_API_KEY
+    ):Response<WeatherDailyResponse>
 }

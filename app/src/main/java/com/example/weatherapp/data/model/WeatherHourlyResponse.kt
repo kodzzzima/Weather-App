@@ -3,8 +3,8 @@ package com.example.weatherapp.data.model
 import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 
-@Keep
-data class WeatherHourly(
+
+data class WeatherHourlyResponse(
     @SerializedName("hourly")
     val hourly: List<Hourly>,
     @SerializedName("lat")
@@ -25,7 +25,6 @@ data class WeatherHourly(
         val humidity: Int,
         val pop: Double,
         val pressure: Int,
-        val rain: Rain,
         val temp: Double,
         val uvi: Double,
         val visibility: Int,
@@ -33,11 +32,6 @@ data class WeatherHourly(
         val wind_deg: Int,
         val wind_gust: Double,
         val wind_speed: Double
-    )
-
-    @Keep
-    data class Rain(
-        val `1h`: Double
     )
 
     @Keep

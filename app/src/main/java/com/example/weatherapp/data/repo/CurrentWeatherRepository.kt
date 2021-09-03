@@ -2,11 +2,9 @@ package com.example.weatherapp.data.repo
 
 import com.example.weatherapp.data.SafeApiRequest
 import com.example.weatherapp.data.api.WeatherApi
-import com.example.weatherapp.data.local.WeatherDatabase
-import com.example.weatherapp.data.local.WeatherDetailDao
+import com.example.weatherapp.data.local.dao.WeatherDetailDao
 import com.example.weatherapp.data.model.WeatherDataResponse
-import com.example.weatherapp.data.model.WeatherDetail
-import com.example.weatherapp.data.model.WeatherHourly
+import com.example.weatherapp.data.local.entity.WeatherDetailEntity
 import javax.inject.Inject
 
 class CurrentWeatherRepository @Inject constructor(
@@ -18,15 +16,11 @@ class CurrentWeatherRepository @Inject constructor(
         api.findCityWeatherData(cityName)
     }
 
-    suspend fun getCityForecastHourly(lat:String,lon:String): WeatherHourly = apiRequest {
-            api.getCityForecastHourly(lat, lon)
-        }
-
-    suspend fun addWeather(weatherDetail: WeatherDetail) {
+    suspend fun addWeather(weatherDetail: WeatherDetailEntity) {
         db.addWeather(weatherDetail)
     }
 
-    suspend fun fetchWeatherDetail(cityName: String): WeatherDetail? =
+    suspend fun fetchWeatherDetail(cityName: String): WeatherDetailEntity? =
         db.fetchWeatherByCity(cityName)
 
 }

@@ -2,8 +2,10 @@ package com.example.weatherapp.di
 
 import android.content.Context
 import androidx.room.Room
+import com.example.weatherapp.data.local.dao.WeatherHourlyDao
 import com.example.weatherapp.data.local.WeatherDatabase
-import com.example.weatherapp.data.local.WeatherDetailDao
+import com.example.weatherapp.data.local.dao.WeatherDailyDao
+import com.example.weatherapp.data.local.dao.WeatherDetailDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,5 +29,13 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideCurrentWeatherDao(db: WeatherDatabase): WeatherDetailDao = db.getWeatherDao()
+
+    @Provides
+    @Singleton
+    fun provideHourlyForecastDao(db: WeatherDatabase): WeatherHourlyDao = db.getWeatherHourlyDao()
+
+    @Provides
+    @Singleton
+    fun provideDailyForecastDao(db: WeatherDatabase): WeatherDailyDao = db.getWeatherDailyDao()
 
 }

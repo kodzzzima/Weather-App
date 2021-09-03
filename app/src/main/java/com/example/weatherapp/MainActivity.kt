@@ -5,8 +5,17 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
+import com.example.weatherapp.data.ApiException
+import com.example.weatherapp.data.NoInternetException
+import com.example.weatherapp.data.local.entity.WeatherDetailEntity
+import com.example.weatherapp.data.model.WeatherDataResponse
 import com.example.weatherapp.databinding.ActivityMainBinding
+import com.example.weatherapp.util.Constants
+import com.example.weatherapp.util.State
+import com.example.weatherapp.util.Utils
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 private lateinit var binding: ActivityMainBinding
 
@@ -35,3 +44,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
+
