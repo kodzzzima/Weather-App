@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:textSize="90sp"
+            android:textSize="100sp"
             tools:text="27°" />
 
         <TextView
@@ -42,7 +42,6 @@
         android:id="@+id/rv_hourly"
         android:layout_width="wrap_content"
         android:layout_height="100dp"
-        android:layout_marginTop="10dp"
         android:background="@null"
         android:orientation="horizontal"
 
@@ -110,9 +109,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_toEndOf="@+id/today_txt"
-                android:text="Дождь"
                 android:textColor="@color/white"
-                android:textSize="17sp" />
+                android:textSize="17sp"
+                tools:text="Дождь" />
 
             <TextView
                 android:id="@+id/today_temperature"

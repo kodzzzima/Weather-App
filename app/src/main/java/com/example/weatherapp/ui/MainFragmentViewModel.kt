@@ -121,18 +121,15 @@ class MainFragmentViewModel @Inject internal constructor(
 
     fun fetchHourlyWeatherFromDb() {
 
-//        viewModelScope.launch {
-//            sharedPreferences.edit().putString(Constants.Coords.LAT, "Moscow").apply()
-//            _weatherHourlyLiveData.postValue(State.loading())
-//            _weatherHourlyLiveData.postValue(
-//                State.success(
-//                    hourlyRepository.getCityForecastHourly(
-//                        "33.44", "-94.04"
-//                    )
-//                )
-//
-//            )
-//        }
+        viewModelScope.launch {
+            _weatherHourlyLiveData.postValue(State.loading())
+            _weatherHourlyLiveData.postValue(
+                State.success(
+                    hourlyRepository.getCityForecastHourly(lat!!, lon!!)
+                )
+
+            )
+        }
     }
 
     private fun getCurrentWeatherFromApi(cityName: String) {
@@ -141,7 +138,8 @@ class MainFragmentViewModel @Inject internal constructor(
             try {
                 weatherCurrentResponse = weatherCurrentRepository.getWeatherFromApi(cityName)
                 withContext(Dispatchers.Main) {
-                    val currentWeatherEntity = convertCurrentWeatherResponseToEntity(weatherCurrentResponse)
+                    val currentWeatherEntity =
+                        convertCurrentWeatherResponseToEntity(weatherCurrentResponse)
                     weatherCurrentRepository.addCurrentWeatherToDb(currentWeatherEntity)
                     _currentWeatherLiveData.postValue(
                         State.success(
@@ -169,10 +167,10 @@ class MainFragmentViewModel @Inject internal constructor(
         }
     }
 
-    private fun saveCityNameAndCoordinates(city:String, lat:String,lon:String) {
-        sharedPreferences.edit().putString(Constants.Coordinates.CITY,city).apply()
-        sharedPreferences.edit().putString(Constants.Coordinates.LAT,lat).apply()
-        sharedPreferences.edit().putString(Constants.Coordinates.LON,lon).apply()
+    private fun saveCityNameAndCoordinates(city: String, lat: String, lon: String) {
+        sharedPreferences.edit().putString(Constants.Coordinates.CITY, city).apply()
+        sharedPreferences.edit().putString(Constants.Coordinates.LAT, lat).apply()
+        sharedPreferences.edit().putString(Constants.Coordinates.LON, lon).apply()
     }
 
 

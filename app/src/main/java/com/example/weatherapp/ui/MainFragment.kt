@@ -63,14 +63,32 @@ class MainFragment : BindingFragment<FragmentMainBinding>() {
     }
 
     private fun observeWeatherDaily() {
-        mainFragmentViewModel.weatherDailyLiveData.observe(viewLifecycleOwner,{ state ->
+        mainFragmentViewModel.weatherDailyLiveData.observe(viewLifecycleOwner, { state ->
             when (state) {
                 is State.Loading -> {
-                    Log.d("testLog", "loading---daily")
                 }
                 is State.Success -> {
                     state.data.let { weatherDaily ->
-                        Log.d("testLog", "success--- daily")
+                        binding.apply {
+                            todayDescription.text =
+                                weatherDaily[0].description.toString()
+                            todayTemperature.text =
+                                "${
+                                    weatherDaily[0].tempDay?.roundToInt()
+                                }°/°${weatherDaily[0].tempNight?.roundToInt()}"
+
+                            tomorrowDescription.text =
+                                weatherDaily[1].description.toString()
+                            tomorrowTemperature.text = "${
+                                weatherDaily[1].tempDay?.roundToInt()
+                            }°/°${weatherDaily[1].tempNight?.roundToInt()}"
+
+                            afterTomorrowDescription.text =
+                                weatherDaily[2].description.toString()
+                            afterTomorrowTemperature.text = "${
+                                weatherDaily[2].tempDay?.roundToInt()
+                            }°/°${weatherDaily[2].tempNight?.roundToInt()}"
+                        }
                         Log.d("testLog", weatherDaily[0].description.toString())
                     }
 
@@ -134,16 +152,6 @@ class MainFragment : BindingFragment<FragmentMainBinding>() {
                 }
             }
         })
-    }
-
-    private fun getDateTime(s: Int): String? {
-        try {
-            val sdf = SimpleDateFormat("HH:mm")
-            val netDate = Date(s.toLong() * 1000)
-            return sdf.format(netDate)
-        } catch (e: Exception) {
-            return e.toString()
-        }
     }
 
 }
