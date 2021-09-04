@@ -12,18 +12,18 @@ class WeatherDailyRepository @Inject constructor(
     private val db: WeatherDailyDao
 ): SafeApiRequest() {
 
-    suspend fun getCityForecastDaily(lat:String,lon:String): WeatherDailyResponse = apiRequest {
+    suspend fun getDailyWeatherFromApi(lat:String, lon:String): WeatherDailyResponse = apiRequest {
         api.getCityWeatherDaily(lat, lon)
     }
 
-    suspend fun fetchWeatherDaily(): List<WeatherDailyEntity> =
+    suspend fun getDailyWeatherFromDb(): List<WeatherDailyEntity> =
         db.getAllWeather()
 
-    suspend fun addAllWeather(weatherList: List<WeatherDailyEntity>) {
+    suspend fun addDailyWeatherToDb(weatherList: List<WeatherDailyEntity>) {
         db.addAllWeather(weatherList)
     }
 
-    suspend fun deleteAllWeather() {
+    suspend fun deleteAllWeatherFromDb() {
         db.deleteAllWeather()
     }
 }

@@ -3,6 +3,7 @@ package com.example.weatherapp.ui.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.weatherapp.data.local.entity.WeatherHourlyEntity
 import com.example.weatherapp.data.model.WeatherHourlyResponse
 import com.example.weatherapp.databinding.ItemForecastHourlyBinding
 import java.text.SimpleDateFormat
@@ -12,14 +13,14 @@ import kotlin.math.roundToLong
 
 class ForecastAdapter : RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder>() {
 
-    private val forecastList = ArrayList<WeatherHourlyResponse.Hourly>()
+    private val forecastList = ArrayList<WeatherHourlyEntity>()
 
     class ForecastViewHolder(private val binding: ItemForecastHourlyBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(hourlyResponse: WeatherHourlyResponse.Hourly) {
+        fun bind(weatherHourlyEntity: WeatherHourlyEntity) {
             binding.apply {
-                itemTemperature.text = hourlyResponse.temp.roundToLong().toString() + "°"
-                val timeConverted = getDateTime(hourlyResponse.dt)
+                itemTemperature.text = weatherHourlyEntity.temp?.roundToLong().toString() + "°"
+                val timeConverted = weatherHourlyEntity.dt?.let { getDateTime(it) }
                 itemTime.text = timeConverted
             }
         }
@@ -49,7 +50,7 @@ class ForecastAdapter : RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder>
 
     override fun getItemCount(): Int = forecastList.size
 
-    fun setData(newHourlyList: List<WeatherHourlyResponse.Hourly>) {
+    fun setData(newHourlyList: List<WeatherHourlyEntity>) {
         forecastList.clear()
         forecastList.addAll(newHourlyList)
         notifyDataSetChanged()

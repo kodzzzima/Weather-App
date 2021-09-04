@@ -13,7 +13,6 @@ import com.example.weatherapp.databinding.FragmentMainBinding
 import com.example.weatherapp.ui.adapters.ForecastAdapter
 import com.example.weatherapp.util.State
 import dagger.hilt.android.AndroidEntryPoint
-import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -36,7 +35,7 @@ class MainFragment : BindingFragment<FragmentMainBinding>() {
     private fun setupUI() {
         mainFragmentViewModel.fetchCurrentWeatherFromDb()
         mainFragmentViewModel.fetchHourlyWeatherFromDb()
-        mainFragmentViewModel.fetchWeatherDailyFromDb()
+        mainFragmentViewModel.fetchDailyWeatherFromDb()
         initRecyclerView()
     }
 
@@ -89,9 +88,7 @@ class MainFragment : BindingFragment<FragmentMainBinding>() {
                                 weatherDaily[2].tempDay?.roundToInt()
                             }°/°${weatherDaily[2].tempNight?.roundToInt()}"
                         }
-                        Log.d("testLog", weatherDaily[0].description.toString())
                     }
-
                 }
                 is State.Error -> {
                     Log.d("testLog", state.message + "daily")
@@ -108,10 +105,9 @@ class MainFragment : BindingFragment<FragmentMainBinding>() {
                 }
                 is State.Success -> {
                     state.data.let { weatherDetail ->
-                        forecastAdapter.setData(state.data.hourly)
+                        forecastAdapter.setData(state.data)
                         Log.d("testLog", "success--- hourly")
                         Log.d("testLog", weatherDetail.toString())
-//                        val iconCode = weatherDetail.icon?.replace("n", "d")
                     }
 
                 }
