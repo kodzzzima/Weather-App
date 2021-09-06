@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.data.local.entity.WeatherHourlyEntity
 import com.example.weatherapp.data.model.WeatherHourlyResponse
 import com.example.weatherapp.databinding.ItemForecastHourlyBinding
+import com.example.weatherapp.util.convertToImageSource
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -20,6 +21,7 @@ class ForecastAdapter : RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder>
         fun bind(weatherHourlyEntity: WeatherHourlyEntity) {
             binding.apply {
                 itemTemperature.text = weatherHourlyEntity.temp?.roundToLong().toString() + "°"
+                itemIcon.setImageResource(weatherHourlyEntity.icon.convertToImageSource())
                 val timeConverted = weatherHourlyEntity.dt?.let { getDateTime(it) }
                 itemTime.text = timeConverted
             }

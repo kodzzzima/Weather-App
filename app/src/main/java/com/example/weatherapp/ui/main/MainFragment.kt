@@ -16,6 +16,7 @@ import com.example.weatherapp.core.BindingFragment
 import com.example.weatherapp.databinding.FragmentMainBinding
 import com.example.weatherapp.ui.adapters.ForecastAdapter
 import com.example.weatherapp.util.State
+import com.example.weatherapp.util.convertToImageSource
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.roundToInt
 
@@ -47,7 +48,7 @@ class MainFragment : BindingFragment<FragmentMainBinding>() {
         mainFragmentViewModel.fetchCurrentWeatherFromDb()
         mainFragmentViewModel.fetchHourlyWeatherFromDb()
         mainFragmentViewModel.fetchDailyWeatherFromDb()
-        binding.btnMore.setOnClickListener{
+        binding.btnMore.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_weatherWeekFragment)
         }
         initRecyclerView()
@@ -90,17 +91,21 @@ class MainFragment : BindingFragment<FragmentMainBinding>() {
                                     weatherDaily[0].tempDay?.roundToInt()
                                 }°/°${weatherDaily[0].tempNight?.roundToInt()}"
 
+                            todayIcon.setImageResource(weatherDaily[0].icon.convertToImageSource())
+
                             tomorrowDescription.text =
                                 weatherDaily[1].description.toString()
                             tomorrowTemperature.text = "${
                                 weatherDaily[1].tempDay?.roundToInt()
                             }°/°${weatherDaily[1].tempNight?.roundToInt()}"
+                            tomorrowIcon.setImageResource(weatherDaily[1].icon.convertToImageSource())
 
                             afterTomorrowDescription.text =
                                 weatherDaily[2].description.toString()
                             afterTomorrowTemperature.text = "${
                                 weatherDaily[2].tempDay?.roundToInt()
                             }°/°${weatherDaily[2].tempNight?.roundToInt()}"
+                            afterTomorrowIcon.setImageResource(weatherDaily[2].icon.convertToImageSource())
                         }
                     }
                 }
@@ -119,6 +124,9 @@ class MainFragment : BindingFragment<FragmentMainBinding>() {
                 }
                 is State.Success -> {
                     state.data.let { weatherDetail ->
+                        for (item in state.data) {
+                            Log.d("testLog", item.icon.toString())
+                        }
                         forecastAdapter.setData(state.data)
                         Log.d("testLog", "success--- hourly")
                         Log.d("testLog", weatherDetail.toString())
@@ -166,15 +174,15 @@ class MainFragment : BindingFragment<FragmentMainBinding>() {
 
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.toolbar_menu,menu)
+        inflater.inflate(R.menu.toolbar_menu, menu)
 
         val search = menu.findItem(R.id.menuItemSearch)
         val searchView = search?.actionView as? SearchView
         searchView?.setOnQueryTextListener(
-            object: SearchView.OnQueryTextListener{
+            object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
-                    Log.d("testLog","daaaa")
-                    Toast.makeText(requireContext(),"da",Toast.LENGTH_SHORT).show()
+                    Log.d("testLog", "daaaa")
+                    Toast.makeText(requireContext(), "da", Toast.LENGTH_SHORT).show()
                     return false
                 }
 
@@ -186,6 +194,22 @@ class MainFragment : BindingFragment<FragmentMainBinding>() {
         )
         super.onCreateOptionsMenu(menu, inflater)
     }
+
+//    fun covertImgCodeToSource(code: String?): Int {
+//        var codeInteger = 2131165304
+//        when (code) {
+//            "01d", "01n" -> codeInteger = R.drawable.ic_clear_sky
+//            "02d", "02n" -> codeInteger = R.drawable.ic_few_clouds
+//            "03d", "03n" -> codeInteger = R.drawable.ic_scattered_clouds
+//            "04n", "04d" -> codeInteger = R.drawable.ic_broken_clouds
+//            "09d" -> codeInteger = R.drawable.ic_shower_rain
+//            "50d" -> codeInteger = R.drawable.ic_mist
+//            "10d" -> codeInteger = R.drawable.ic_rain
+//            "11d" -> codeInteger = R.drawable.ic_thunderstorm
+//            "13d" -> codeInteger = R.drawable.ic_snow
+//        }
+//        return codeInteger
+//    }
 
 }
 

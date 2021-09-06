@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.data.local.entity.WeatherDailyEntity
 import com.example.weatherapp.databinding.ItemWeatherWeekBinding
+import com.example.weatherapp.util.convertToImageSource
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -22,6 +23,7 @@ class WeatherWeekAdapter:RecyclerView.Adapter<WeatherWeekAdapter.WeatherWeekView
                 txtTempDay.text = weatherDailyEntity.tempDay?.roundToLong().toString() + "° / "
                 txtTempNight.text = weatherDailyEntity.tempNight?.roundToLong().toString() + "°"
                 txtDescription.text = weatherDailyEntity.description
+                imgItem.setImageResource(weatherDailyEntity.icon.convertToImageSource())
             }
         }
 
@@ -48,5 +50,4 @@ class WeatherWeekAdapter:RecyclerView.Adapter<WeatherWeekAdapter.WeatherWeekView
         notifyDataSetChanged()
     }
 
-    private fun convert
 }
