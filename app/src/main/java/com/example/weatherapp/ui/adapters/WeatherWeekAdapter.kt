@@ -1,15 +1,13 @@
 package com.example.weatherapp.ui.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.data.local.entity.WeatherDailyEntity
 import com.example.weatherapp.databinding.ItemWeatherWeekBinding
 import com.example.weatherapp.util.convertToImageSource
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.collections.ArrayList
+import com.example.weatherapp.util.getDayAndMonth
+import com.example.weatherapp.util.getDayOfWeek
 import kotlin.math.roundToLong
 
 class WeatherWeekAdapter:RecyclerView.Adapter<WeatherWeekAdapter.WeatherWeekViewHolder>() {
@@ -20,6 +18,8 @@ class WeatherWeekAdapter:RecyclerView.Adapter<WeatherWeekAdapter.WeatherWeekView
         RecyclerView.ViewHolder(binding.root) {
         fun bind(weatherDailyEntity: WeatherDailyEntity) {
             binding.apply {
+                txtDayOfWeek.text = weatherDailyEntity.dt.getDayOfWeek()
+                txtDayNumber.text = weatherDailyEntity.dt.getDayAndMonth()
                 txtTempDay.text = weatherDailyEntity.tempDay?.roundToLong().toString() + "° / "
                 txtTempNight.text = weatherDailyEntity.tempNight?.roundToLong().toString() + "°"
                 txtDescription.text = weatherDailyEntity.description
