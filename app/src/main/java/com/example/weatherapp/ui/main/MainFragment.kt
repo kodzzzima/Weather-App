@@ -3,6 +3,8 @@ package com.example.weatherapp.ui.main
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
@@ -18,6 +20,7 @@ import com.example.weatherapp.ui.adapters.ForecastAdapter
 import com.example.weatherapp.util.State
 import com.example.weatherapp.util.convertToImageSource
 import com.example.weatherapp.util.roundTemperatureAndGetString
+import com.example.weatherapp.util.titleCaseFirstChar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.roundToInt
 
@@ -33,24 +36,38 @@ class MainFragment : BindingFragment<FragmentMainBinding>() {
         get() = FragmentMainBinding::inflate
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        setHasOptionsMenu(true)
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as MainActivity?)!!.setSupportActionBar(binding.toolbar)
         setupUI()
         observeAPICall()
+        binding.apply {
+            btnSearch.setOnClickListener {
+                textViewToolbarTitle.visibility = View.GONE
+                btnSearch.visibility = View.GONE
+                btnLocation.visibility = View.GONE
+                inputFindCityWeather.visibility = View.VISIBLE
+            }
+        }
     }
 
     private fun setupUI() {
-        mainFragmentViewModel.fetchCurrentWeatherFromDb()
+        mainFragmentViewModel.cityPrefs?.let { mainFragmentViewModel.fetchCurrentWeatherFromDb(it) }
         mainFragmentViewModel.fetchHourlyWeatherFromDb()
         mainFragmentViewModel.fetchDailyWeatherFromDb()
         binding.btnMore.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_weatherWeekFragment)
+        }
+        binding.inputFindCityWeather.setOnEditorActionListener { textView, id, keyEvent ->
+            if (id == EditorInfo.IME_ACTION_DONE) {
+                mainFragmentViewModel.fetchCurrentWeatherFromDb((textView as EditText).text.toString())
+                binding.apply {
+                    textViewToolbarTitle.visibility = View.VISIBLE
+                    btnSearch.visibility = View.VISIBLE
+                    btnLocation.visibility = View.VISIBLE
+                    inputFindCityWeather.visibility = View.GONE
+                }
+            }
+            false
         }
         initRecyclerView()
     }
@@ -86,26 +103,21 @@ class MainFragment : BindingFragment<FragmentMainBinding>() {
                     state.data.let { weatherDaily ->
                         binding.apply {
                             todayDescription.text =
-                                weatherDaily[0].description
-                            todayTemperature.text =
-                                "${
-                                    weatherDaily[0].tempDay?.roundToInt()
-                                }°/°${weatherDaily[0].tempNight?.roundToInt()}"
-
+                                weatherDaily[0].description?.titleCaseFirstChar()
+                            todayTempDay.text = weatherDaily[0].tempDay?.roundTemperatureAndGetString()
+                            todayTempNight.text = weatherDaily[0].tempNight?.roundTemperatureAndGetString()
                             todayIcon.setImageResource(weatherDaily[0].icon.convertToImageSource())
 
                             tomorrowDescription.text =
-                                weatherDaily[1].description.toString()
-                            tomorrowTemperature.text = "${
-                                weatherDaily[1].tempDay?.roundToInt()
-                            }°/°${weatherDaily[1].tempNight?.roundToInt()}"
+                                weatherDaily[1].description?.titleCaseFirstChar()
+                            tomorrowTempDay.text = weatherDaily[1].tempDay?.roundTemperatureAndGetString()
+                            tomorrowTempNight.text = weatherDaily[1].tempNight?.roundTemperatureAndGetString()
                             tomorrowIcon.setImageResource(weatherDaily[1].icon.convertToImageSource())
 
                             afterTomorrowDescription.text =
-                                weatherDaily[2].description.toString()
-                            afterTomorrowTemperature.text = "${
-                                weatherDaily[2].tempDay?.roundToInt()
-                            }°/°${weatherDaily[2].tempNight?.roundToInt()}"
+                                weatherDaily[2].description?.titleCaseFirstChar()
+                            afterTomorrowTempDay.text = weatherDaily[2].tempDay?.roundTemperatureAndGetString()
+                            afterTomorrowTempNight.text = weatherDaily[2].tempNight?.roundTemperatureAndGetString()
                             afterTomorrowIcon.setImageResource(weatherDaily[2].icon.convertToImageSource())
                         }
                     }
@@ -144,9 +156,11 @@ class MainFragment : BindingFragment<FragmentMainBinding>() {
                 is State.Success -> {
                     state.data.let { weatherDetail ->
                         binding.apply {
-                            textViewTemperature.text =weatherDetail.temp?.roundTemperatureAndGetString()
-                            feelsLikeValue.text = weatherDetail.feelsLike?.roundTemperatureAndGetString()
-                            textViewDescription.text = weatherDetail.description
+                            textViewTemperature.text =
+                                weatherDetail.temp?.roundTemperatureAndGetString()
+                            feelsLikeValue.text =
+                                weatherDetail.feelsLike?.roundTemperatureAndGetString()
+                            textViewDescription.text = weatherDetail.description?.titleCaseFirstChar()
                             pressureValue.text = weatherDetail.pressure.toString()
                             humidityValue.text = weatherDetail.humidity.toString() + "%"
                             windSpeedValue.text = weatherDetail.wind_speed.toString() + " м/c"
@@ -159,46 +173,6 @@ class MainFragment : BindingFragment<FragmentMainBinding>() {
             }
         })
     }
-
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.toolbar_menu, menu)
-
-        val search = menu.findItem(R.id.menuItemSearch)
-        val searchView = search?.actionView as? SearchView
-        searchView?.setOnQueryTextListener(
-            object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    Log.d("testLog", "daaaa")
-                    Toast.makeText(requireContext(), "da", Toast.LENGTH_SHORT).show()
-                    return false
-                }
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    return true
-                }
-
-            }
-        )
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-//    fun covertImgCodeToSource(code: String?): Int {
-//        var codeInteger = 2131165304
-//        when (code) {
-//            "01d", "01n" -> codeInteger = R.drawable.ic_clear_sky
-//            "02d", "02n" -> codeInteger = R.drawable.ic_few_clouds
-//            "03d", "03n" -> codeInteger = R.drawable.ic_scattered_clouds
-//            "04n", "04d" -> codeInteger = R.drawable.ic_broken_clouds
-//            "09d" -> codeInteger = R.drawable.ic_shower_rain
-//            "50d" -> codeInteger = R.drawable.ic_mist
-//            "10d" -> codeInteger = R.drawable.ic_rain
-//            "11d" -> codeInteger = R.drawable.ic_thunderstorm
-//            "13d" -> codeInteger = R.drawable.ic_snow
-//        }
-//        return codeInteger
-//    }
-
 }
 
 

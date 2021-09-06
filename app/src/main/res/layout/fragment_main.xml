@@ -19,16 +19,61 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/textViewToolbarTitle"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="24dp"
-            android:gravity="center"
-            android:text="Москва"
-            android:textColor="@color/white"
-            android:textSize="19sp"
-            android:textStyle="bold" />
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/btn_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:background="@null"
+                android:src="@drawable/ic_location"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textViewToolbarTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Москва"
+                android:textColor="@color/white"
+                android:textSize="19sp"
+                android:textStyle="bold"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input_find_city_weather"
+                style="@style/SearchViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/btn_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:background="@null"
+                android:src="@drawable/ic_search"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -103,137 +148,273 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:padding="5dp">
+            android:gravity="center">
 
             <ImageView
                 android:id="@+id/today_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:src="@drawable/ic_clear_sky" />
+                style="@style/item_weather_week_style"
+                android:layout_marginVertical="@dimen/item_weather_week_margin"
+                android:layout_marginEnd="@dimen/item_weather_week_margin"
+                android:paddingVertical="@dimen/item_weather_week_margin"
+                app:layout_constraintBottom_toBottomOf="parent"
+
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/ic_clear_sky" />
 
             <TextView
                 android:id="@+id/today_txt"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_toEndOf="@+id/today_icon"
-                android:text="@string/today"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginVertical="@dimen/item_weather_week_margin"
+                android:gravity="start"
+                android:paddingVertical="@dimen/item_weather_week_margin"
                 android:textColor="@color/white"
-                android:textSize="15sp" />
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/today_icon"
+                app:layout_constraintTop_toTopOf="parent"
+                android:text="@string/today" />
+
 
             <TextView
                 android:id="@+id/today_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_toEndOf="@+id/today_txt"
-                android:textColor="@color/white"
-                android:textSize="17sp"
-                tools:text="Дождь" />
+                style="@style/item_weather_week_style"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginVertical="@dimen/item_weather_week_margin"
+                android:gravity="center"
+                android:maxLines="2"
+                android:paddingVertical="@dimen/item_weather_week_margin"
+
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/today_temp_day"
+                app:layout_constraintStart_toEndOf="@+id/today_txt"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Снегопад " />
 
             <TextView
-                android:id="@+id/today_temperature"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:text="12°/6°"
-                android:textColor="@color/white"
-                android:textSize="17sp" />
-        </RelativeLayout>
+                android:id="@+id/today_temp_day"
+                style="@style/item_weather_week_style"
+                android:layout_marginVertical="@dimen/item_weather_week_margin"
+                android:layout_marginEnd="@dimen/item_weather_week_margin"
+                android:paddingVertical="@dimen/item_weather_week_margin"
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/separator"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="28°" />
+
+            <TextView
+                android:id="@+id/separator"
+                style="@style/item_weather_week_style"
+                android:layout_marginHorizontal="@dimen/item_weather_week_margin"
+                android:layout_marginVertical="@dimen/item_weather_week_margin"
+                android:paddingVertical="@dimen/item_weather_week_margin"
+                android:text="@string/separator"
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/today_temp_night"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
-        <RelativeLayout
+            <TextView
+                android:id="@+id/today_temp_night"
+                style="@style/item_weather_week_style"
+                android:layout_marginVertical="@dimen/item_weather_week_margin"
+                android:layout_marginEnd="@dimen/item_weather_week_margin"
+                android:paddingVertical="@dimen/item_weather_week_margin"
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="15°" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="5dp">
+            android:layout_gravity="center"
+            android:gravity="center">
 
             <ImageView
                 android:id="@+id/tomorrow_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:src="@drawable/ic_clear_sky" />
+                style="@style/item_weather_week_style"
+                android:layout_marginVertical="@dimen/item_weather_week_margin"
+                android:layout_marginEnd="@dimen/item_weather_week_margin"
+                android:paddingVertical="@dimen/item_weather_week_margin"
+                app:layout_constraintBottom_toBottomOf="parent"
+
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/ic_clear_sky" />
 
             <TextView
                 android:id="@+id/tomorrow_txt"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_toEndOf="@+id/tomorrow_icon"
-                android:text="@string/tomorrow"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginVertical="@dimen/item_weather_week_margin"
+                android:gravity="start"
+                android:paddingVertical="@dimen/item_weather_week_margin"
                 android:textColor="@color/white"
-                android:textSize="15sp" />
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tomorrow_icon"
+                app:layout_constraintTop_toTopOf="parent"
+                android:text="@string/tomorrow" />
+
 
             <TextView
                 android:id="@+id/tomorrow_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_toEndOf="@+id/tomorrow_txt"
-                android:text="Дождь"
-                android:textColor="@color/white"
-                android:textSize="17sp" />
+                style="@style/item_weather_week_style"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginVertical="@dimen/item_weather_week_margin"
+                android:gravity="center"
+                android:maxLines="2"
+                android:paddingVertical="@dimen/item_weather_week_margin"
+
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/tomorrow_temp_day"
+                app:layout_constraintStart_toEndOf="@+id/tomorrow_txt"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Снегопад " />
 
             <TextView
-                android:id="@+id/tomorrow_temperature"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:text="12°/6°"
-                android:textColor="@color/white"
-                android:textSize="17sp" />
-        </RelativeLayout>
+                android:id="@+id/tomorrow_temp_day"
+                style="@style/item_weather_week_style"
+                android:layout_marginVertical="@dimen/item_weather_week_margin"
+                android:layout_marginEnd="@dimen/item_weather_week_margin"
+                android:paddingVertical="@dimen/item_weather_week_margin"
 
-        <RelativeLayout
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/separator2"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="28°" />
+
+            <TextView
+                android:id="@+id/separator2"
+                style="@style/item_weather_week_style"
+                android:layout_marginHorizontal="@dimen/item_weather_week_margin"
+                android:layout_marginVertical="@dimen/item_weather_week_margin"
+                android:paddingVertical="@dimen/item_weather_week_margin"
+                android:text="@string/separator"
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/tomorrow_temp_night"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/tomorrow_temp_night"
+                style="@style/item_weather_week_style"
+                android:layout_marginVertical="@dimen/item_weather_week_margin"
+                android:layout_marginEnd="@dimen/item_weather_week_margin"
+                android:paddingVertical="@dimen/item_weather_week_margin"
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="15°" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="5dp">
+            android:layout_gravity="center"
+            android:gravity="center">
 
             <ImageView
                 android:id="@+id/after_tomorrow_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:src="@drawable/ic_clear_sky" />
+                style="@style/item_weather_week_style"
+                android:layout_marginVertical="@dimen/item_weather_week_margin"
+                android:layout_marginEnd="@dimen/item_weather_week_margin"
+                android:paddingVertical="@dimen/item_weather_week_margin"
+                app:layout_constraintBottom_toBottomOf="parent"
+
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/ic_clear_sky" />
 
             <TextView
                 android:id="@+id/after_tomorrow_txt"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_toEndOf="@+id/after_tomorrow_icon"
-                android:text="@string/after_tomorrow"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginVertical="@dimen/item_weather_week_margin"
+                android:gravity="start"
+                android:paddingVertical="@dimen/item_weather_week_margin"
                 android:textColor="@color/white"
-                android:textSize="15sp" />
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/after_tomorrow_icon"
+                app:layout_constraintTop_toTopOf="parent"
+                android:text="@string/after_tomorrow" />
+
 
             <TextView
                 android:id="@+id/after_tomorrow_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_toEndOf="@+id/after_tomorrow_txt"
-                android:text="Дождь"
-                android:textColor="@color/white"
-                android:textSize="17sp" />
+                style="@style/item_weather_week_style"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginVertical="@dimen/item_weather_week_margin"
+                android:gravity="center"
+                android:maxLines="2"
+                android:paddingVertical="@dimen/item_weather_week_margin"
+
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/after_tomorrow_temp_day"
+                app:layout_constraintStart_toEndOf="@+id/after_tomorrow_txt"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Снегопад " />
 
             <TextView
-                android:id="@+id/after_tomorrow_temperature"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:text="12°/6°"
-                android:textColor="@color/white"
-                android:textSize="17sp" />
-        </RelativeLayout>
+                android:id="@+id/after_tomorrow_temp_day"
+                style="@style/item_weather_week_style"
+                android:layout_marginVertical="@dimen/item_weather_week_margin"
+                android:layout_marginEnd="@dimen/item_weather_week_margin"
+                android:paddingVertical="@dimen/item_weather_week_margin"
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/separator3"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="28°" />
+
+            <TextView
+                android:id="@+id/separator3"
+                style="@style/item_weather_week_style"
+                android:layout_marginHorizontal="@dimen/item_weather_week_margin"
+                android:layout_marginVertical="@dimen/item_weather_week_margin"
+                android:paddingVertical="@dimen/item_weather_week_margin"
+                android:text="@string/separator"
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/after_tomorrow_temp_night"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/after_tomorrow_temp_night"
+                style="@style/item_weather_week_style"
+                android:layout_marginVertical="@dimen/item_weather_week_margin"
+                android:layout_marginEnd="@dimen/item_weather_week_margin"
+                android:paddingVertical="@dimen/item_weather_week_margin"
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="15°" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 
     <androidx.cardview.widget.CardView

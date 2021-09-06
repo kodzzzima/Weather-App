@@ -54,11 +54,11 @@ class MainFragmentViewModel @Inject internal constructor(
 
     private lateinit var weatherHourlyResponse: WeatherHourlyResponse
 
-    private var lat: String? =
+    var lat: String? =
         sharedPreferences.getString(Constants.Coordinates.LAT, Constants.Coordinates.LAT_DEFAULT)
-    private var lon: String? =
+    var lon: String? =
         sharedPreferences.getString(Constants.Coordinates.LON, Constants.Coordinates.LON_DEFAULT)
-    private var city: String? =
+    var cityPrefs: String? =
         sharedPreferences.getString(Constants.Coordinates.CITY, Constants.Coordinates.CITY_DEFAULT)
 
     private fun getDailyWeatherFromApi() {
@@ -229,13 +229,13 @@ class MainFragmentViewModel @Inject internal constructor(
         sharedPreferences.edit().putString(Constants.Coordinates.LON, lon).apply()
     }
 
-    fun fetchCurrentWeatherFromDb() {
+    fun fetchCurrentWeatherFromDb(cityName: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val currentWeather = city?.let { weatherCurrentRepository.getCurrentWeatherFromDb(it) }
+            val currentWeather = weatherCurrentRepository.getCurrentWeatherFromDb(cityName)
             withContext(Dispatchers.Main) {
                 if (currentWeather != null) {
                     if (Utils.isTimeValid(currentWeather.dateTime)) {
-                        city?.let { getCurrentWeatherFromApi(it) }
+                        getCurrentWeatherFromApi(cityName)
                     } else {
                         _currentWeatherLiveData.postValue(
                             State.success(
@@ -245,7 +245,7 @@ class MainFragmentViewModel @Inject internal constructor(
                     }
 
                 } else {
-                    city?.let { getCurrentWeatherFromApi(it) }
+                    getCurrentWeatherFromApi(cityName)
                 }
             }
         }
