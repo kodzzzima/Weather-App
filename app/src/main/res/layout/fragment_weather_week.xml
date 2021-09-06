@@ -11,7 +11,7 @@
         android:id="@+id/btn_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_margin="15dp"
         android:background="@null"
         android:src="@drawable/ic_arrow_back"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,6 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
+        android:gravity="center"
         android:text="Прогноз на неделю"
         android:textColor="@color/white"
         android:textSize="35sp"
@@ -30,17 +31,17 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         android:backgroundTint="@android:color/transparent"
-        app:layout_constraintVertical_bias="0.4"
         app:cardCornerRadius="20dp"
         app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_week"

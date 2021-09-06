@@ -5,10 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.data.local.entity.WeatherDailyEntity
 import com.example.weatherapp.databinding.ItemWeatherWeekBinding
-import com.example.weatherapp.util.convertToImageSource
-import com.example.weatherapp.util.getDayAndMonth
-import com.example.weatherapp.util.getDayOfWeek
-import kotlin.math.roundToLong
+import com.example.weatherapp.util.*
 
 class WeatherWeekAdapter:RecyclerView.Adapter<WeatherWeekAdapter.WeatherWeekViewHolder>() {
 
@@ -20,9 +17,9 @@ class WeatherWeekAdapter:RecyclerView.Adapter<WeatherWeekAdapter.WeatherWeekView
             binding.apply {
                 txtDayOfWeek.text = weatherDailyEntity.dt.getDayOfWeek()
                 txtDayNumber.text = weatherDailyEntity.dt.getDayAndMonth()
-                txtTempDay.text = weatherDailyEntity.tempDay?.roundToLong().toString() + "° / "
-                txtTempNight.text = weatherDailyEntity.tempNight?.roundToLong().toString() + "°"
-                txtDescription.text = weatherDailyEntity.description
+                txtTempDay.text = weatherDailyEntity.tempDay?.roundTemperatureAndGetString()
+                txtTempNight.text = weatherDailyEntity.tempNight?.roundTemperatureAndGetString()
+                txtDescription.text = weatherDailyEntity.description?.titleCaseFirstChar()
                 imgItem.setImageResource(weatherDailyEntity.icon.convertToImageSource())
             }
         }

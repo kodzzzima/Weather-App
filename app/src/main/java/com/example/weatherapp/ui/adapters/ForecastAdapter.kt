@@ -7,6 +7,8 @@ import com.example.weatherapp.data.local.entity.WeatherHourlyEntity
 import com.example.weatherapp.data.model.WeatherHourlyResponse
 import com.example.weatherapp.databinding.ItemForecastHourlyBinding
 import com.example.weatherapp.util.convertToImageSource
+import com.example.weatherapp.util.getTimeInHoursAndMinutes
+import com.example.weatherapp.util.roundTemperatureAndGetString
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -20,21 +22,12 @@ class ForecastAdapter : RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder>
         RecyclerView.ViewHolder(binding.root) {
         fun bind(weatherHourlyEntity: WeatherHourlyEntity) {
             binding.apply {
-                itemTemperature.text = weatherHourlyEntity.temp?.roundToLong().toString() + "°"
+                itemTemperature.text = weatherHourlyEntity.temp?.roundTemperatureAndGetString()
                 itemIcon.setImageResource(weatherHourlyEntity.icon.convertToImageSource())
-                val timeConverted = weatherHourlyEntity.dt?.let { getDateTime(it) }
-                itemTime.text = timeConverted
+                itemTime.text =  weatherHourlyEntity.dt.getTimeInHoursAndMinutes()
             }
         }
-        private fun getDateTime(s: Int): String? {
-            try {
-                val sdf = SimpleDateFormat("HH:mm")
-                val netDate = Date(s.toLong()*1000)
-                return sdf.format(netDate)
-            } catch (e: Exception) {
-                return e.toString()
-            }
-        }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ForecastViewHolder {
