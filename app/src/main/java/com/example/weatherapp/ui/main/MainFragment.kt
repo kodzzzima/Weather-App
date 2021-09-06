@@ -17,6 +17,7 @@ import com.example.weatherapp.databinding.FragmentMainBinding
 import com.example.weatherapp.ui.adapters.ForecastAdapter
 import com.example.weatherapp.util.State
 import com.example.weatherapp.util.convertToImageSource
+import com.example.weatherapp.util.roundTemperatureAndGetString
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.roundToInt
 
@@ -85,7 +86,7 @@ class MainFragment : BindingFragment<FragmentMainBinding>() {
                     state.data.let { weatherDaily ->
                         binding.apply {
                             todayDescription.text =
-                                weatherDaily[0].description.toString()
+                                weatherDaily[0].description
                             todayTemperature.text =
                                 "${
                                     weatherDaily[0].tempDay?.roundToInt()
@@ -124,14 +125,8 @@ class MainFragment : BindingFragment<FragmentMainBinding>() {
                 }
                 is State.Success -> {
                     state.data.let { weatherDetail ->
-                        for (item in state.data) {
-                            Log.d("testLog", item.icon.toString())
-                        }
-                        forecastAdapter.setData(state.data)
-                        Log.d("testLog", "success--- hourly")
-                        Log.d("testLog", weatherDetail.toString())
+                        forecastAdapter.setData(weatherDetail)
                     }
-
                 }
                 is State.Error -> {
                     Log.d("testLog", state.message + "hourly")
@@ -145,28 +140,21 @@ class MainFragment : BindingFragment<FragmentMainBinding>() {
         mainFragmentViewModel.currentWeatherLiveData.observe(viewLifecycleOwner, { state ->
             when (state) {
                 is State.Loading -> {
-                    Log.d("testLog", "loading---")
                 }
                 is State.Success -> {
                     state.data.let { weatherDetail ->
                         binding.apply {
-                            textViewTemperature.text =
-                                weatherDetail.temp?.roundToInt().toString() + "°"
-                            feelsLikeValue.text =
-                                weatherDetail.feelsLike?.roundToInt().toString() + "°"
+                            textViewTemperature.text =weatherDetail.temp?.roundTemperatureAndGetString()
+                            feelsLikeValue.text = weatherDetail.feelsLike?.roundTemperatureAndGetString()
                             textViewDescription.text = weatherDetail.description
                             pressureValue.text = weatherDetail.pressure.toString()
                             humidityValue.text = weatherDetail.humidity.toString() + "%"
                             windSpeedValue.text = weatherDetail.wind_speed.toString() + " м/c"
 
                         }
-                        Log.d("testLog", "success---")
-                        Log.d("testLog", weatherDetail.toString())
-//                        val iconCode = weatherDetail.icon?.replace("n", "d")
                     }
                 }
                 is State.Error -> {
-                    Log.d("testLog", state.message)
                 }
             }
         })
