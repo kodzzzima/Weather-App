@@ -7,16 +7,28 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.example.weatherapp.ui.MainFragment"
+        android:name="com.example.weatherapp.ui.main.MainFragment"
         android:label="fragment_main"
         tools:layout="@layout/fragment_main" >
         <action
             android:id="@+id/action_mainFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_weatherWeekFragment"
+            app:destination="@id/weatherWeekFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.weatherapp.ui.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/weatherWeekFragment"
+        android:name="com.example.weatherapp.ui.weatherWeek.WeatherWeekFragment"
+        android:label="fragment_weather_week"
+        tools:layout="@layout/fragment_weather_week" >
+        <action
+            android:id="@+id/action_weatherWeekFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
 </navigation>

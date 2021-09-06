@@ -1,20 +1,24 @@
-package com.example.weatherapp.ui
+package com.example.weatherapp.ui.main
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
+import android.view.*
+import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewbinding.ViewBinding
+import com.example.weatherapp.MainActivity
+import com.example.weatherapp.R
 import com.example.weatherapp.core.BindingFragment
 import com.example.weatherapp.databinding.FragmentMainBinding
 import com.example.weatherapp.ui.adapters.ForecastAdapter
 import com.example.weatherapp.util.State
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
 import kotlin.math.roundToInt
+
 
 @AndroidEntryPoint
 class MainFragment : BindingFragment<FragmentMainBinding>() {
@@ -26,8 +30,15 @@ class MainFragment : BindingFragment<FragmentMainBinding>() {
     override val bindingInflater: (LayoutInflater) -> ViewBinding
         get() = FragmentMainBinding::inflate
 
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        setHasOptionsMenu(true)
+        super.onCreate(savedInstanceState)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (activity as MainActivity?)!!.setSupportActionBar(binding.toolbar)
         setupUI()
         observeAPICall()
     }
@@ -36,6 +47,9 @@ class MainFragment : BindingFragment<FragmentMainBinding>() {
         mainFragmentViewModel.fetchCurrentWeatherFromDb()
         mainFragmentViewModel.fetchHourlyWeatherFromDb()
         mainFragmentViewModel.fetchDailyWeatherFromDb()
+        binding.btnMore.setOnClickListener{
+            findNavController().navigate(R.id.action_mainFragment_to_weatherWeekFragment)
+        }
         initRecyclerView()
     }
 
@@ -148,6 +162,29 @@ class MainFragment : BindingFragment<FragmentMainBinding>() {
                 }
             }
         })
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.toolbar_menu,menu)
+
+        val search = menu.findItem(R.id.menuItemSearch)
+        val searchView = search?.actionView as? SearchView
+        searchView?.setOnQueryTextListener(
+            object: SearchView.OnQueryTextListener{
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    Log.d("testLog","daaaa")
+                    Toast.makeText(requireContext(),"da",Toast.LENGTH_SHORT).show()
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    return true
+                }
+
+            }
+        )
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
 }

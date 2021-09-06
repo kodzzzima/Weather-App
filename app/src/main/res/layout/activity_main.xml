@@ -5,30 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/background"
     tools:context=".MainActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        style="@style/ToolBarStyle"
-        android:layout_marginStart="50dp"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@null"
-        android:gravity="center">
-
-        <TextView
-            android:id="@+id/textViewToolbarTitle"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="24dp"
-            android:gravity="center"
-            android:text="Москва"
-            android:textColor="@color/white"
-            android:textSize="19sp"
-            android:textStyle="bold" />
-
-    </androidx.appcompat.widget.Toolbar>
 
     <fragment
         android:id="@+id/container_fragment"

@@ -1,4 +1,4 @@
-package com.example.weatherapp.ui
+package com.example.weatherapp.ui.main
 
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
