@@ -32,11 +32,11 @@ class WeatherWeekViewModel @Inject internal constructor(
     private lateinit var weatherDailyResponse: WeatherDailyResponse
 
     private var lat: String? =
-        sharedPreferences.getString(Constants.Coordinates.LAT, Constants.Coordinates.LAT_DEFAULT)
+        sharedPreferences.getString(Constants.Preferences.LAT, Constants.Preferences.LAT_DEFAULT)
     private var lon: String? =
-        sharedPreferences.getString(Constants.Coordinates.LON, Constants.Coordinates.LON_DEFAULT)
+        sharedPreferences.getString(Constants.Preferences.LON, Constants.Preferences.LON_DEFAULT)
     private var city: String? =
-        sharedPreferences.getString(Constants.Coordinates.CITY, Constants.Coordinates.CITY_DEFAULT)
+        sharedPreferences.getString(Constants.Preferences.CITY, Constants.Preferences.CITY_DEFAULT)
 
     private fun getDailyWeatherFromApi() {
         _weatherDailyLiveData.postValue(State.loading())

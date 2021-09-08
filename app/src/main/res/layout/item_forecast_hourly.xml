@@ -17,7 +17,8 @@
         tools:text="сейчас" />
 
     <ImageView
-        android:layout_marginVertical="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="7dp"
         android:textColor="@color/white"
         android:id="@+id/item_icon"
         android:layout_width="wrap_content"
@@ -29,7 +30,7 @@
         android:id="@+id/item_temperature"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
+        android:textSize="17sp"
         tools:text="10°" />
 
 </LinearLayout>

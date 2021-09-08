@@ -1,5 +1,6 @@
 package com.example.weatherapp.data.repo
 
+import android.util.Log
 import com.example.weatherapp.data.SafeApiRequest
 import com.example.weatherapp.data.api.WeatherApi
 import com.example.weatherapp.data.local.dao.WeatherDailyDao
@@ -20,6 +21,9 @@ class WeatherDailyRepository @Inject constructor(
         db.getAllWeather()
 
     suspend fun addDailyWeatherToDb(weatherList: List<WeatherDailyEntity>) {
+        for (item in weatherList){
+            Log.d("testLog",item.id.toString())
+        }
         db.addAllWeather(weatherList)
     }
 

@@ -10,6 +10,7 @@ import com.example.weatherapp.data.local.entity.WeatherHourlyEntity
 @Dao
 interface WeatherHourlyDao {
 
+    @JvmSuppressWildcards
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addAllWeather(allWeatherList: List<WeatherHourlyEntity>)
 

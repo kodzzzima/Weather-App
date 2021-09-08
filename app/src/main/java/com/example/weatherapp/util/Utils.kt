@@ -1,6 +1,7 @@
 package com.example.weatherapp.util
 
 import android.annotation.SuppressLint
+import android.util.Log
 import com.example.weatherapp.data.local.entity.WeatherCurrentEntity
 import com.example.weatherapp.data.local.entity.WeatherDailyEntity
 import com.example.weatherapp.data.local.entity.WeatherHourlyEntity
@@ -17,7 +18,7 @@ object Utils {
         SimpleDateFormat(dateFormat).format(Date())
 
     @SuppressLint("SimpleDateFormat")
-    fun isTimeValid(dateTimeSavedWeather: String?): Boolean{
+    fun isTimeValid(dateTimeSavedWeather: String?): Boolean {
         dateTimeSavedWeather?.let {
             val currentDateTime = Date()
             val savedWeatherDateTime =
@@ -50,31 +51,37 @@ object Utils {
 
     fun convertWeatherDailyToEntity(
         weatherDailyResponse: WeatherDailyResponse
-    ): MutableList<WeatherDailyEntity> {
+    ):List<WeatherDailyEntity> {
         val weatherDailyList = mutableListOf<WeatherDailyEntity>()
+        var iterator = 0
         for (item in weatherDailyResponse.daily) {
-            val weatherDailyEntity = WeatherDailyEntity(
+            val weatherDailyEntityItem = WeatherDailyEntity(
+                id = iterator,
                 tempDay = item.temp.day,
                 tempNight = item.temp.night,
                 icon = item.weather[0].icon,
                 description = item.weather[0].description,
                 dt = item.dt,
             )
-            weatherDailyList.add(weatherDailyEntity)
+            weatherDailyList.add(weatherDailyEntityItem)
+            iterator+=1
         }
-        return weatherDailyList
+        return weatherDailyList.toList()
     }
 
     fun convertWeatherHourlyToEntity(weatherHourlyResponse: WeatherHourlyResponse):
             MutableList<WeatherHourlyEntity> {
         val weatherHourlyList = mutableListOf<WeatherHourlyEntity>()
+        var iterator = 0
         for (item in weatherHourlyResponse.hourly) {
             val weatherHourlyEntity = WeatherHourlyEntity(
+                id = iterator,
                 temp = item.temp,
                 icon = item.weather[0].icon,
                 dt = item.dt,
             )
             weatherHourlyList.add(weatherHourlyEntity)
+            iterator+=1
         }
         return weatherHourlyList
     }

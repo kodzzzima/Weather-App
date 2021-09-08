@@ -182,6 +182,7 @@ class MainFragment : BindingFragment<FragmentMainBinding>(), EasyPermissions.Per
                     }
                 }
                 is State.Error -> {
+                    Log.d("testLog",state.message)
                     Toast.makeText(requireContext(),state.message,Toast.LENGTH_SHORT).show()
                 }
             }
@@ -199,6 +200,7 @@ class MainFragment : BindingFragment<FragmentMainBinding>(), EasyPermissions.Per
                     }
                 }
                 is State.Error -> {
+                    Log.d("testLog",state.message)
                     Toast.makeText(requireContext(),state.message,Toast.LENGTH_SHORT).show()
                 }
             }

@@ -59,11 +59,13 @@ class MainFragmentViewModel @Inject internal constructor(
     private lateinit var weatherHourlyResponse: WeatherHourlyResponse
 
     var latPrefs: String? =
-        sharedPreferences.getString(Constants.Coordinates.LAT, Constants.Coordinates.LAT_DEFAULT)
+        sharedPreferences.getString(Constants.Preferences.LAT, Constants.Preferences.LAT_DEFAULT)
     var lonPrefs: String? =
-        sharedPreferences.getString(Constants.Coordinates.LON, Constants.Coordinates.LON_DEFAULT)
+        sharedPreferences.getString(Constants.Preferences.LON, Constants.Preferences.LON_DEFAULT)
     var cityPrefs: String? =
-        sharedPreferences.getString(Constants.Coordinates.CITY, Constants.Coordinates.CITY_DEFAULT)
+        sharedPreferences.getString(Constants.Preferences.CITY, Constants.Preferences.CITY_DEFAULT)
+    var datePrefs: String? =
+        sharedPreferences.getString(Constants.Preferences.CITY, Constants.Preferences.CITY_DEFAULT)
 
 
     private fun getCurrentWeatherFromApi(cityName: String?) {
@@ -187,6 +189,9 @@ class MainFragmentViewModel @Inject internal constructor(
     fun fetchDailyWeatherFromDb(lat: String?, lon: String?) {
         viewModelScope.launch(Dispatchers.IO) {
             val weatherDaily = weatherDailyRepository.getDailyWeatherFromDb()
+            for (item in weatherDaily){
+                Log.d("testLog",item.description.toString() + " da $item")
+            }
             withContext(Dispatchers.Main) {
                 if (weatherDaily.isNotEmpty()) {
                     if (true) {
@@ -232,9 +237,9 @@ class MainFragmentViewModel @Inject internal constructor(
 
 
     fun saveCityNameAndCoordinates(city: String, lat: Double, lon: Double) {
-        sharedPreferences.edit().putString(Constants.Coordinates.CITY, city).apply()
-        sharedPreferences.edit().putString(Constants.Coordinates.LAT, lat.toString()).apply()
-        sharedPreferences.edit().putString(Constants.Coordinates.LON, lon.toString()).apply()
+        sharedPreferences.edit().putString(Constants.Preferences.CITY, city).apply()
+        sharedPreferences.edit().putString(Constants.Preferences.LAT, lat.toString()).apply()
+        sharedPreferences.edit().putString(Constants.Preferences.LON, lon.toString()).apply()
     }
 
     fun fetchCurrentWeatherFromDb(cityName: String?) {

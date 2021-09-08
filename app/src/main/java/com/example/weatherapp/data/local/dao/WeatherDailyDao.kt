@@ -10,6 +10,7 @@ import com.example.weatherapp.data.local.entity.WeatherDailyEntity
 interface WeatherDailyDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @JvmSuppressWildcards
     suspend fun addAllWeather(allWeatherList: List<WeatherDailyEntity>)
 
     @Query("DELETE FROM ${WeatherDailyEntity.TABLE_NAME}")
