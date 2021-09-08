@@ -189,9 +189,6 @@ class MainFragmentViewModel @Inject internal constructor(
     fun fetchDailyWeatherFromDb(lat: String?, lon: String?) {
         viewModelScope.launch(Dispatchers.IO) {
             val weatherDaily = weatherDailyRepository.getDailyWeatherFromDb()
-            for (item in weatherDaily){
-                Log.d("testLog",item.description.toString() + " da $item")
-            }
             withContext(Dispatchers.Main) {
                 if (weatherDaily.isNotEmpty()) {
                     if (true) {

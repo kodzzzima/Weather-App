@@ -17,6 +17,6 @@ interface WeatherHourlyDao {
     @Query("DELETE FROM ${WeatherHourlyEntity.TABLE_NAME}")
     suspend fun deleteAllWeather()
 
-    @Query("SELECT * FROM ${WeatherDailyEntity.TABLE_NAME}")
+    @Query("SELECT * FROM ${WeatherHourlyEntity.TABLE_NAME}")
     suspend fun getAllWeather(): List<WeatherHourlyEntity>
 }

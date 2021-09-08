@@ -27,5 +27,4 @@ class WeatherHourlyRepository @Inject constructor(
     suspend fun deleteAllWeatherFromDb() {
         db.deleteAllWeather()
     }
-
 }

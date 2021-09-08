@@ -21,9 +21,6 @@ class WeatherDailyRepository @Inject constructor(
         db.getAllWeather()
 
     suspend fun addDailyWeatherToDb(weatherList: List<WeatherDailyEntity>) {
-        for (item in weatherList){
-            Log.d("testLog",item.id.toString())
-        }
         db.addAllWeather(weatherList)
     }
 

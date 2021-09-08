@@ -22,5 +22,4 @@ class WeatherCurrentRepository @Inject constructor(
 
     suspend fun getCurrentWeatherFromDb(cityName: String): WeatherCurrentEntity? =
         db.getWeatherByCity(cityName)
-
 }
