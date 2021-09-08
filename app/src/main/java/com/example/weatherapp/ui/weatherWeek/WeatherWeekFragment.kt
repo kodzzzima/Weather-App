@@ -39,26 +39,7 @@ class WeatherWeekFragment : BindingFragment<FragmentWeatherWeekBinding>() {
                 }
                 is State.Success -> {
                     state.data.let { weatherDaily ->
-                        weatherWeekAdapter.setData(state.data)
-//                            todayDescription.text =
-//                                weatherDaily[0].description.toString()
-//                            todayTemperature.text =
-//                                "${
-//                                    weatherDaily[0].tempDay?.roundToInt()
-//                                }°/°${weatherDaily[0].tempNight?.roundToInt()}"
-//
-//                            tomorrowDescription.text =
-//                                weatherDaily[1].description.toString()
-//                            tomorrowTemperature.text = "${
-//                                weatherDaily[1].tempDay?.roundToInt()
-//                            }°/°${weatherDaily[1].tempNight?.roundToInt()}"
-//
-//                            afterTomorrowDescription.text =
-//                                weatherDaily[2].description.toString()
-//                            afterTomorrowTemperature.text = "${
-//                                weatherDaily[2].tempDay?.roundToInt()
-//                            }°/°${weatherDaily[2].tempNight?.roundToInt()}"
-
+                        weatherWeekAdapter.setData(weatherDaily)
                     }
                 }
                 is State.Error -> {

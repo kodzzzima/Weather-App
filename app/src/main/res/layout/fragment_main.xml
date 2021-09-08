@@ -25,8 +25,8 @@
 
             <ImageButton
                 android:id="@+id/btn_location"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_marginEnd="10dp"
                 android:background="@null"
                 android:src="@drawable/ic_location"
@@ -46,6 +46,7 @@
                 android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.45"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -64,8 +65,8 @@
 
             <ImageButton
                 android:id="@+id/btn_search"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_marginEnd="10dp"
                 android:background="@null"
                 android:src="@drawable/ic_search"
@@ -82,7 +83,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="70dp"
         android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
@@ -95,7 +96,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:textSize="100sp"
-            tools:text="27°" />
+            tools:text="2°" />
 
         <TextView
             android:id="@+id/textView_description"
@@ -108,20 +109,31 @@
 
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_hourly"
-        android:layout_width="wrap_content"
-        android:layout_height="100dp"
-        android:background="@null"
-        android:orientation="horizontal"
 
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="10dp"
+        android:backgroundTint="@android:color/transparent"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="1dp"
         app:layout_constraintBottom_toTopOf="@+id/three_days"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        tools:listitem="@layout/item_forecast_hourly" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_hourly"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:background="@null"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_forecast_hourly" />
+    </androidx.cardview.widget.CardView>
+
 
     <TextView
         android:id="@+id/btn_more"
@@ -141,7 +153,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="40dp"
         android:gravity="start"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@id/curr_wea_layout"
@@ -174,12 +186,12 @@
                 android:layout_marginVertical="@dimen/item_weather_week_margin"
                 android:gravity="start"
                 android:paddingVertical="@dimen/item_weather_week_margin"
-                android:textColor="@color/white"
+                android:text="@string/today"
 
+                android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/today_icon"
-                app:layout_constraintTop_toTopOf="parent"
-                android:text="@string/today" />
+                app:layout_constraintTop_toTopOf="parent" />
 
 
             <TextView
@@ -263,12 +275,12 @@
                 android:layout_marginVertical="@dimen/item_weather_week_margin"
                 android:gravity="start"
                 android:paddingVertical="@dimen/item_weather_week_margin"
-                android:textColor="@color/white"
+                android:text="@string/tomorrow"
 
+                android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tomorrow_icon"
-                app:layout_constraintTop_toTopOf="parent"
-                android:text="@string/tomorrow" />
+                app:layout_constraintTop_toTopOf="parent" />
 
 
             <TextView
@@ -353,12 +365,12 @@
                 android:layout_marginVertical="@dimen/item_weather_week_margin"
                 android:gravity="start"
                 android:paddingVertical="@dimen/item_weather_week_margin"
-                android:textColor="@color/white"
+                android:text="@string/after_tomorrow"
 
+                android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/after_tomorrow_icon"
-                app:layout_constraintTop_toTopOf="parent"
-                android:text="@string/after_tomorrow" />
+                app:layout_constraintTop_toTopOf="parent" />
 
 
             <TextView

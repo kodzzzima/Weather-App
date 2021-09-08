@@ -3,8 +3,8 @@ package com.example.weatherapp.ui.weatherWeek
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.weatherapp.core.BaseViewModel
 import com.example.weatherapp.data.ApiException
 import com.example.weatherapp.data.NoInternetException
 import com.example.weatherapp.data.local.entity.WeatherDailyEntity
@@ -12,6 +12,7 @@ import com.example.weatherapp.data.model.WeatherDailyResponse
 import com.example.weatherapp.data.repo.WeatherDailyRepository
 import com.example.weatherapp.util.Constants
 import com.example.weatherapp.util.State
+import com.example.weatherapp.util.Utils.convertWeatherDailyToEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,7 +23,7 @@ import javax.inject.Inject
 class WeatherWeekViewModel @Inject internal constructor(
     private val weatherDailyRepository: WeatherDailyRepository,
     private var sharedPreferences: SharedPreferences
-): BaseViewModel() {
+): ViewModel() {
     private val _weatherDailyLiveData =
         MutableLiveData<State<List<WeatherDailyEntity>>>()
     val weatherDailyLiveData: LiveData<State<List<WeatherDailyEntity>>>
@@ -92,23 +93,6 @@ class WeatherWeekViewModel @Inject internal constructor(
             }
         }
 
-    }
-
-    private fun convertWeatherDailyToEntity(
-        weatherDailyResponse: WeatherDailyResponse
-    ): MutableList<WeatherDailyEntity> {
-        val weatherDailyList = mutableListOf<WeatherDailyEntity>()
-        for (item in weatherDailyResponse.daily) {
-            val weatherDailyEntity = WeatherDailyEntity(
-                tempDay = item.temp.day,
-                tempNight = item.temp.night,
-                icon = item.weather[0].icon,
-                description = item.weather[0].description,
-                dt = item.dt,
-            )
-            weatherDailyList.add(weatherDailyEntity)
-        }
-        return weatherDailyList
     }
 
 

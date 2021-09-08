@@ -1,24 +1,28 @@
 package com.example.weatherapp.ui.main
 
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.weatherapp.core.BaseViewModel
 import com.example.weatherapp.data.ApiException
 import com.example.weatherapp.data.NoInternetException
-import com.example.weatherapp.data.local.entity.WeatherDailyEntity
-import com.example.weatherapp.data.model.WeatherCurrentResponse
 import com.example.weatherapp.data.local.entity.WeatherCurrentEntity
+import com.example.weatherapp.data.local.entity.WeatherDailyEntity
 import com.example.weatherapp.data.local.entity.WeatherHourlyEntity
+import com.example.weatherapp.data.model.WeatherCurrentResponse
 import com.example.weatherapp.data.model.WeatherDailyResponse
 import com.example.weatherapp.data.model.WeatherHourlyResponse
 import com.example.weatherapp.data.repo.WeatherCurrentRepository
-import com.example.weatherapp.data.repo.WeatherHourlyRepository
 import com.example.weatherapp.data.repo.WeatherDailyRepository
+import com.example.weatherapp.data.repo.WeatherHourlyRepository
 import com.example.weatherapp.util.Constants
 import com.example.weatherapp.util.State
 import com.example.weatherapp.util.Utils
+import com.example.weatherapp.util.Utils.convertCurrentWeatherResponseToEntity
+import com.example.weatherapp.util.Utils.convertWeatherDailyToEntity
+import com.example.weatherapp.util.Utils.convertWeatherHourlyToEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,7 +35,7 @@ class MainFragmentViewModel @Inject internal constructor(
     private val weatherHourlyRepository: WeatherHourlyRepository,
     private val weatherDailyRepository: WeatherDailyRepository,
     private var sharedPreferences: SharedPreferences
-) : BaseViewModel() {
+) : ViewModel() {
 
     private val _currentWeatherLiveData =
         MutableLiveData<State<WeatherCurrentEntity>>()
@@ -54,19 +58,67 @@ class MainFragmentViewModel @Inject internal constructor(
 
     private lateinit var weatherHourlyResponse: WeatherHourlyResponse
 
-    var lat: String? =
+    var latPrefs: String? =
         sharedPreferences.getString(Constants.Coordinates.LAT, Constants.Coordinates.LAT_DEFAULT)
-    var lon: String? =
+    var lonPrefs: String? =
         sharedPreferences.getString(Constants.Coordinates.LON, Constants.Coordinates.LON_DEFAULT)
     var cityPrefs: String? =
         sharedPreferences.getString(Constants.Coordinates.CITY, Constants.Coordinates.CITY_DEFAULT)
 
-    private fun getDailyWeatherFromApi() {
+
+    private fun getCurrentWeatherFromApi(cityName: String?) {
+        _currentWeatherLiveData.postValue(State.loading())
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                weatherCurrentResponse = cityName?.let {
+                    weatherCurrentRepository.getWeatherFromApi(
+                        it
+                    )
+                }!!
+
+                saveCityNameAndCoordinates(
+                    cityName,
+                    weatherCurrentResponse.coord.lat,
+                    weatherCurrentResponse.coord.lon)
+
+                withContext(Dispatchers.Main) {
+                    val currentWeatherEntity =
+                        convertCurrentWeatherResponseToEntity(weatherCurrentResponse)
+                    Log.d("testLog",currentWeatherEntity.dateTime.toString() + "dada")
+                    weatherCurrentRepository.addCurrentWeatherToDb(currentWeatherEntity)
+                    _currentWeatherLiveData.postValue(
+                        State.success(
+                            currentWeatherEntity
+                        )
+                    )
+                }
+            } catch (e: ApiException) {
+                withContext(Dispatchers.Main) {
+                    _currentWeatherLiveData.postValue(State.error(e.message ?: ""))
+                }
+            } catch (e: NoInternetException) {
+                withContext(Dispatchers.Main) {
+                    _currentWeatherLiveData.postValue(State.error(e.message ?: ""))
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    _currentWeatherLiveData.postValue(
+                        State.error(
+                            e.message ?: ""
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    private fun getDailyWeatherFromApi(lat: String?, lon: String?) {
         _weatherDailyLiveData.postValue(State.loading())
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 if (lat?.isNotEmpty() == true && lon?.isNotEmpty() == true) {
-                    weatherDailyResponse = weatherDailyRepository.getDailyWeatherFromApi(lat!!, lon!!)
+                    weatherDailyResponse =
+                        weatherDailyRepository.getDailyWeatherFromApi(lat, lon)
                 }
                 withContext(Dispatchers.Main) {
                     val weatherDailyToDb = convertWeatherDailyToEntity(weatherDailyResponse)
@@ -96,34 +148,13 @@ class MainFragmentViewModel @Inject internal constructor(
             }
         }
     }
-
-    fun fetchDailyWeatherFromDb() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val weatherDaily = weatherDailyRepository.getDailyWeatherFromDb()
-            withContext(Dispatchers.Main) {
-                if (weatherDaily.isNotEmpty()) {
-                    if (true) {
-                        weatherDailyRepository.deleteAllWeatherFromDb()
-                        getDailyWeatherFromApi()
-                    } else {
-                        _weatherDailyLiveData.postValue(
-                            State.success(
-                                weatherDaily
-                            )
-                        )
-                    }
-                } else getDailyWeatherFromApi()
-            }
-        }
-
-    }
-
-    private fun getHourlyWeatherFromApi(){
+    private fun getHourlyWeatherFromApi(lat:String?, lon:String?) {
         _weatherHourlyLiveData.postValue(State.loading())
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 if (lat?.isNotEmpty() == true && lon?.isNotEmpty() == true) {
-                    weatherHourlyResponse = weatherHourlyRepository.getHourlyWeatherFromApi(lat!!, lon!!)
+                    weatherHourlyResponse =
+                        weatherHourlyRepository.getHourlyWeatherFromApi(lat, lon)
                 }
                 withContext(Dispatchers.Main) {
                     val weatherHourlyToDb = convertWeatherHourlyToEntity(weatherHourlyResponse)
@@ -153,29 +184,39 @@ class MainFragmentViewModel @Inject internal constructor(
             }
         }
     }
-
-    private fun convertWeatherHourlyToEntity(weatherHourlyResponse: WeatherHourlyResponse):
-            MutableList<WeatherHourlyEntity> {
-        val weatherHourlyList = mutableListOf<WeatherHourlyEntity>()
-        for (item in weatherHourlyResponse.hourly) {
-            val weatherHourlyEntity = WeatherHourlyEntity(
-                temp =item.temp,
-                icon =item.weather[0].icon,
-                dt = item.dt,
-            )
-            weatherHourlyList.add(weatherHourlyEntity)
+    fun fetchDailyWeatherFromDb(lat: String?, lon: String?) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val weatherDaily = weatherDailyRepository.getDailyWeatherFromDb()
+            withContext(Dispatchers.Main) {
+                if (weatherDaily.isNotEmpty()) {
+                    if (true) {
+                        weatherDailyRepository.deleteAllWeatherFromDb()
+                        getDailyWeatherFromApi(lat, lon)
+                    } else {
+                        _weatherDailyLiveData.postValue(
+                            State.success(
+                                weatherDaily
+                            )
+                        )
+                    }
+                } else getDailyWeatherFromApi(lat, lon)
+            }
         }
-        return weatherHourlyList
+
     }
 
-    fun fetchHourlyWeatherFromDb() {
+
+
+
+
+    fun fetchHourlyWeatherFromDb(lat: String?, lon: String?) {
         viewModelScope.launch(Dispatchers.IO) {
             val weatherHourly = weatherHourlyRepository.getHourlyWeatherFromDb()
             withContext(Dispatchers.Main) {
                 if (weatherHourly.isNotEmpty()) {
                     if (true) {
                         weatherHourlyRepository.deleteAllWeatherFromDb()
-                        getHourlyWeatherFromApi()
+                        getHourlyWeatherFromApi(lat, lon)
                     } else {
                         _weatherHourlyLiveData.postValue(
                             State.success(
@@ -183,55 +224,22 @@ class MainFragmentViewModel @Inject internal constructor(
                             )
                         )
                     }
-                } else getDailyWeatherFromApi()
+                } else getHourlyWeatherFromApi(lat, lon)
             }
         }
     }
 
-    private fun getCurrentWeatherFromApi(cityName: String) {
-        _currentWeatherLiveData.postValue(State.loading())
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                weatherCurrentResponse = weatherCurrentRepository.getWeatherFromApi(cityName)
-                withContext(Dispatchers.Main) {
-                    val currentWeatherEntity =
-                        convertCurrentWeatherResponseToEntity(weatherCurrentResponse)
-                    weatherCurrentRepository.addCurrentWeatherToDb(currentWeatherEntity)
-                    _currentWeatherLiveData.postValue(
-                        State.success(
-                            currentWeatherEntity
-                        )
-                    )
-                }
-            } catch (e: ApiException) {
-                withContext(Dispatchers.Main) {
-                    _currentWeatherLiveData.postValue(State.error(e.message ?: ""))
-                }
-            } catch (e: NoInternetException) {
-                withContext(Dispatchers.Main) {
-                    _currentWeatherLiveData.postValue(State.error(e.message ?: ""))
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    _currentWeatherLiveData.postValue(
-                        State.error(
-                            e.message ?: ""
-                        )
-                    )
-                }
-            }
-        }
-    }
 
-    private fun saveCityNameAndCoordinates(city: String, lat: String, lon: String) {
+
+    fun saveCityNameAndCoordinates(city: String, lat: Double, lon: Double) {
         sharedPreferences.edit().putString(Constants.Coordinates.CITY, city).apply()
-        sharedPreferences.edit().putString(Constants.Coordinates.LAT, lat).apply()
-        sharedPreferences.edit().putString(Constants.Coordinates.LON, lon).apply()
+        sharedPreferences.edit().putString(Constants.Coordinates.LAT, lat.toString()).apply()
+        sharedPreferences.edit().putString(Constants.Coordinates.LON, lon.toString()).apply()
     }
 
-    fun fetchCurrentWeatherFromDb(cityName: String) {
+    fun fetchCurrentWeatherFromDb(cityName: String?) {
         viewModelScope.launch(Dispatchers.IO) {
-            val currentWeather = weatherCurrentRepository.getCurrentWeatherFromDb(cityName)
+            val currentWeather = cityName?.let { weatherCurrentRepository.getCurrentWeatherFromDb(it) }
             withContext(Dispatchers.Main) {
                 if (currentWeather != null) {
                     if (Utils.isTimeValid(currentWeather.dateTime)) {
@@ -251,37 +259,4 @@ class MainFragmentViewModel @Inject internal constructor(
         }
     }
 
-    private fun convertCurrentWeatherResponseToEntity(
-        weatherResponse: WeatherCurrentResponse
-    ): WeatherCurrentEntity = WeatherCurrentEntity(
-        description = weatherResponse.weather[0].description,
-        icon = weatherResponse.weather.first().icon,
-        cityName = weatherResponse.name,
-        countryName = weatherResponse.sys.country,
-        temp = weatherResponse.main.temp,
-        feelsLike = weatherResponse.main.feelsLike,
-        lat = weatherResponse.coord.lat,
-        lon = weatherResponse.coord.lon,
-        pressure = weatherResponse.main.pressure,
-        humidity = weatherResponse.main.humidity,
-        wind_speed = weatherResponse.wind.speed,
-        dateTime = Utils.getCurrentDateTime(Constants.Time.DATE_FORMAT_FULL)
-    )
-    
-    private fun convertWeatherDailyToEntity(
-        weatherDailyResponse: WeatherDailyResponse
-    ): MutableList<WeatherDailyEntity> {
-        val weatherDailyList = mutableListOf<WeatherDailyEntity>()
-        for (item in weatherDailyResponse.daily) {
-            val weatherDailyEntity = WeatherDailyEntity(
-                tempDay = item.temp.day,
-                tempNight = item.temp.night,
-                icon = item.weather[0].icon,
-                description = item.weather[0].description,
-                dt = item.dt,
-            )
-            weatherDailyList.add(weatherDailyEntity)
-        }
-        return weatherDailyList
     }
-}

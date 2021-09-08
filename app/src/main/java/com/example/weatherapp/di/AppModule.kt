@@ -2,7 +2,6 @@ package com.example.weatherapp.di
 
 import android.content.Context
 import android.preference.PreferenceManager
-import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

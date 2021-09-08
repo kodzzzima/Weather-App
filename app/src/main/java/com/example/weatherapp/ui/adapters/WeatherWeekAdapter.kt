@@ -7,7 +7,7 @@ import com.example.weatherapp.data.local.entity.WeatherDailyEntity
 import com.example.weatherapp.databinding.ItemWeatherWeekBinding
 import com.example.weatherapp.util.*
 
-class WeatherWeekAdapter:RecyclerView.Adapter<WeatherWeekAdapter.WeatherWeekViewHolder>() {
+class WeatherWeekAdapter : RecyclerView.Adapter<WeatherWeekAdapter.WeatherWeekViewHolder>() {
 
     private val weatherWeekList = ArrayList<WeatherDailyEntity>()
 
@@ -23,10 +23,9 @@ class WeatherWeekAdapter:RecyclerView.Adapter<WeatherWeekAdapter.WeatherWeekView
                 imgItem.setImageResource(weatherDailyEntity.icon.convertToImageSource())
             }
         }
-
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherWeekViewHolder{
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherWeekViewHolder {
         val binding = ItemWeatherWeekBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
@@ -46,5 +45,4 @@ class WeatherWeekAdapter:RecyclerView.Adapter<WeatherWeekAdapter.WeatherWeekView
         weatherWeekList.addAll(newDailyList)
         notifyDataSetChanged()
     }
-
 }

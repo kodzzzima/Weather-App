@@ -14,7 +14,7 @@ object Constants {
         const val LAT = "lat"
         const val LON = "lon"
         const val CITY = "city"
-        const val CITY_DEFAULT = "Moscow"
+        const val CITY_DEFAULT = "Москва"
         const val LAT_DEFAULT = "55.751244"
         const val LON_DEFAULT = "37.618423"
     }

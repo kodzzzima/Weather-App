@@ -1,29 +1,30 @@
 package com.example.weatherapp.util
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.widget.Toast
 import com.example.weatherapp.R
+import com.example.weatherapp.data.local.entity.WeatherCurrentEntity
+import com.example.weatherapp.data.local.entity.WeatherDailyEntity
+import com.example.weatherapp.data.local.entity.WeatherHourlyEntity
+import com.example.weatherapp.data.model.WeatherCurrentResponse
+import com.example.weatherapp.data.model.WeatherDailyResponse
+import com.example.weatherapp.data.model.WeatherHourlyResponse
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 
-fun Context.showToast(message: String) {
-    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-}
-
 fun String?.convertToImageSource(): Int {
-    var codeInteger = 2131165304
+    var codeInteger = 2131165290
     when (this) {
         "01d", "01n" -> codeInteger = R.drawable.ic_clear_sky
         "02d", "02n" -> codeInteger = R.drawable.ic_few_clouds
         "03d", "03n" -> codeInteger = R.drawable.ic_scattered_clouds
         "04n", "04d" -> codeInteger = R.drawable.ic_broken_clouds
-        "09d" -> codeInteger = R.drawable.ic_shower_rain
-        "50d" -> codeInteger = R.drawable.ic_mist
-        "10d" -> codeInteger = R.drawable.ic_rain
-        "11d" -> codeInteger = R.drawable.ic_thunderstorm
-        "13d" -> codeInteger = R.drawable.ic_snow
+        "09d", "09n" -> codeInteger = R.drawable.ic_shower_rain
+        "50d", "50n" -> codeInteger = R.drawable.ic_mist
+        "10d", "10n" -> codeInteger = R.drawable.ic_rain
+        "11d", "11n" -> codeInteger = R.drawable.ic_thunderstorm
+        "13d", "13n" -> codeInteger = R.drawable.ic_snow
     }
     return codeInteger
 }
@@ -65,5 +66,12 @@ fun Int?.getTimeInHoursAndMinutes(): String {
         e.toString()
     }
 }
+
+fun Int?.pressureConvertToMM(): String {
+    val num = (this!! * 0.767).roundToInt()
+    return "$num мм рт ст "
+}
+
+
 
 
