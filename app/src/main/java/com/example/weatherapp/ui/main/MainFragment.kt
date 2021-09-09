@@ -66,7 +66,7 @@ class MainFragment : BindingFragment<FragmentMainBinding>(), EasyPermissions.Per
                         locationLat.toString(),
                         locationLon.toString()
                     )
-                    updateUI()
+                    fetchDataFromDatabases()
                 }
             } else {
                 requestLocationPermission()
@@ -75,6 +75,7 @@ class MainFragment : BindingFragment<FragmentMainBinding>(), EasyPermissions.Per
 
         setupUI()
         observeAPICall()
+
         binding.apply {
             btnSearch.setOnClickListener {
                 textViewToolbarTitle.visibility = View.GONE
@@ -97,7 +98,7 @@ class MainFragment : BindingFragment<FragmentMainBinding>(), EasyPermissions.Per
         )
     }
 
-    private fun updateUI() {
+    private fun fetchDataFromDatabases() {
         mainFragmentViewModel.fetchCurrentWeatherFromDb(
             mainFragmentViewModel.cityPrefs
         )
@@ -113,7 +114,7 @@ class MainFragment : BindingFragment<FragmentMainBinding>(), EasyPermissions.Per
 
     private fun setupUI() {
         initRecyclerView()
-        updateUI()
+        fetchDataFromDatabases()
 
         binding.textViewToolbarTitle.text = mainFragmentViewModel.cityPrefs
 
@@ -238,10 +239,18 @@ class MainFragment : BindingFragment<FragmentMainBinding>(), EasyPermissions.Per
         mainFragmentViewModel.currentWeatherLiveData.observe(viewLifecycleOwner, { state ->
             when (state) {
                 is State.Loading -> {
+                    binding.progressBar.visibility = View.VISIBLE
+                    binding.textViewTemperature.visibility = View.GONE
+                    binding.textViewDescription.visibility = View.GONE
                 }
                 is State.Success -> {
+
                     state.data.let { weatherDetail ->
                         binding.apply {
+                            binding.progressBar.visibility = View.GONE
+                            binding.textViewTemperature.visibility = View.VISIBLE
+                            binding.textViewDescription.visibility = View.VISIBLE
+
                             textViewToolbarTitle.text =
                                 weatherDetail.cityName
 

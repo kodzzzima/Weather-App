@@ -89,7 +89,9 @@ class MainFragmentViewModel @Inject internal constructor(
                         it
                     )
                 }!!
+
                 saveLastResponseTime()
+
                 saveCityNameAndCoordinates(
                     cityName,
                     weatherCurrentResponse.coord.lat.toString(),
@@ -99,12 +101,9 @@ class MainFragmentViewModel @Inject internal constructor(
                 withContext(Dispatchers.Main) {
                     val currentWeatherEntity =
                         convertCurrentWeatherResponseToEntity(weatherCurrentResponse)
-                    Log.d("testLog", currentWeatherEntity.dateTime.toString() + "dada")
                     weatherCurrentRepository.addCurrentWeatherToDb(currentWeatherEntity)
-                    _currentWeatherLiveData.postValue(
-                        State.success(
-                            currentWeatherEntity
-                        )
+
+                    _currentWeatherLiveData.postValue(State.success(currentWeatherEntity)
                     )
                 }
             } catch (e: ApiException) {
@@ -255,7 +254,7 @@ class MainFragmentViewModel @Inject internal constructor(
                             currentWeather
                         )
                     )
-                    if (Utils.isTimeValid(datePrefs)) {
+                    if (true) {
                         Log.d("testLog",datePrefs.toString())
                         Log.d("testLog","valid")
                         getCurrentWeatherFromApi(cityName)

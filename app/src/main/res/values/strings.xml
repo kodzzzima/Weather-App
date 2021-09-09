@@ -7,4 +7,10 @@
     <string name="tomorrow">Завтра</string>
     <string name="after_tomorrow">Послезавтра</string>
     <string name="separator">/</string>
+    <string name="more_button"><![CDATA[Подробнее >]]></string>
+    <string name="feels_like_textview">Ощущается</string>
+    <string name="pressure_textview">Давление</string>
+    <string name="humidity_textview">Влажность</string>
+    <string name="wind_speed_textview">Скорость ветра</string>
+    <string name="weekly_forecast">Прогноз на неделю</string>
 </resources>
