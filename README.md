@@ -12,6 +12,6 @@
 <tr>
 <td> <img src="https://github.com/kodzzzima/Weather-App/blob/main/screenshots/img1.jpg" ></td>
 <td> <img src="https://github.com/kodzzzima/Weather-App/blob/main/screenshots/img3.jpg"" ></td>
-<td> <img src="https://github.com/kodzzzima/Weather-App/blob/main/screenshots/img2.jpg" ></td>
+<td> <img src="https://github.com/kodzzzima/Weather-App/blob/main/screenshots/img4.jpg" ></td>
 </tr>
 <tr>
