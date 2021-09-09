@@ -14,19 +14,19 @@ import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 
 fun String?.convertToImageSource(): Int {
-    var codeInteger = 2131165290
-    when (this) {
-        "01d", "01n" -> codeInteger = R.drawable.ic_clear_sky
-        "02d", "02n" -> codeInteger = R.drawable.ic_few_clouds
-        "03d", "03n" -> codeInteger = R.drawable.ic_scattered_clouds
-        "04n", "04d" -> codeInteger = R.drawable.ic_broken_clouds
-        "09d", "09n" -> codeInteger = R.drawable.ic_shower_rain
-        "50d", "50n" -> codeInteger = R.drawable.ic_mist
-        "10d", "10n" -> codeInteger = R.drawable.ic_rain
-        "11d", "11n" -> codeInteger = R.drawable.ic_thunderstorm
-        "13d", "13n" -> codeInteger = R.drawable.ic_snow
+    val codeInteger = 2131165290
+    return when (this) {
+        "01d", "01n" -> R.drawable.ic_clear_sky
+        "02d", "02n" -> R.drawable.ic_few_clouds
+        "03d", "03n" -> R.drawable.ic_scattered_clouds
+        "04n", "04d" -> R.drawable.ic_broken_clouds
+        "09d", "09n" -> R.drawable.ic_shower_rain
+        "50d", "50n" -> R.drawable.ic_mist
+        "10d", "10n" -> R.drawable.ic_rain
+        "11d", "11n" -> R.drawable.ic_thunderstorm
+        "13d", "13n" -> R.drawable.ic_snow
+        else -> codeInteger
     }
-    return codeInteger
 }
 
 fun String.titleCaseFirstChar() = replaceFirstChar(Char::titlecase)

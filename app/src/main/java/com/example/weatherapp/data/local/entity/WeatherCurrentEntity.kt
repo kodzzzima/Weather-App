@@ -7,8 +7,8 @@ import com.example.weatherapp.data.local.entity.WeatherCurrentEntity.Companion.T
 @Entity(tableName = TABLE_NAME)
 data class WeatherCurrentEntity(
 
-    @PrimaryKey
-    var id: Int? = 0,
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0,
     var temp: Double? = null,
     var icon: String? = null,
     var cityName: String? = null,

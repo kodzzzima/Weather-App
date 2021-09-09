@@ -12,7 +12,7 @@ import com.example.weatherapp.data.model.WeatherDailyResponse
 import com.example.weatherapp.data.repo.WeatherDailyRepository
 import com.example.weatherapp.util.Constants
 import com.example.weatherapp.util.State
-import com.example.weatherapp.util.Utils.convertWeatherDailyToEntity
+import com.example.weatherapp.util.toEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,77 +23,52 @@ import javax.inject.Inject
 class WeatherWeekViewModel @Inject internal constructor(
     private val weatherDailyRepository: WeatherDailyRepository,
     private var sharedPreferences: SharedPreferences
-): ViewModel() {
+) : ViewModel() {
+
     private val _weatherDailyLiveData =
         MutableLiveData<State<List<WeatherDailyEntity>>>()
     val weatherDailyLiveData: LiveData<State<List<WeatherDailyEntity>>>
         get() = _weatherDailyLiveData
 
-    private lateinit var weatherDailyResponse: WeatherDailyResponse
-
-    private var lat: String? =
+    val latPrefs: String? =
         sharedPreferences.getString(Constants.Preferences.LAT, Constants.Preferences.LAT_DEFAULT)
-    private var lon: String? =
+    val lonPrefs: String? =
         sharedPreferences.getString(Constants.Preferences.LON, Constants.Preferences.LON_DEFAULT)
-    private var city: String? =
-        sharedPreferences.getString(Constants.Preferences.CITY, Constants.Preferences.CITY_DEFAULT)
 
-    private fun getDailyWeatherFromApi() {
+    fun getDailyWeatherFromApi(lat: String?, lon: String?) {
+        var weatherDailyResponse: WeatherDailyResponse? = null
         _weatherDailyLiveData.postValue(State.loading())
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 if (lat?.isNotEmpty() == true && lon?.isNotEmpty() == true) {
-                    weatherDailyResponse = weatherDailyRepository.getDailyWeatherFromApi(lat!!, lon!!)
+                    weatherDailyResponse =
+                        weatherDailyRepository.getDailyWeatherFromApi(lat, lon)
                 }
                 withContext(Dispatchers.Main) {
-                    val weatherDailyToDb = convertWeatherDailyToEntity(weatherDailyResponse)
-                    weatherDailyRepository.addDailyWeatherToDb(weatherDailyToDb)
+                    val weatherDailyToRV = weatherDailyResponse?.toEntity()
                     _weatherDailyLiveData.postValue(
                         State.success(
-                            weatherDailyToDb
+                            weatherDailyToRV ?: emptyList()
                         )
                     )
                 }
             } catch (e: ApiException) {
                 withContext(Dispatchers.Main) {
-                    _weatherDailyLiveData.postValue(State.error(e.message ?: ""))
+                    _weatherDailyLiveData.postValue(State.error(e.message.orEmpty()))
                 }
             } catch (e: NoInternetException) {
                 withContext(Dispatchers.Main) {
-                    _weatherDailyLiveData.postValue(State.error(e.message ?: ""))
+                    _weatherDailyLiveData.postValue(State.error(e.message.orEmpty()))
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     _weatherDailyLiveData.postValue(
                         State.error(
-                            e.message ?: ""
+                            e.message.orEmpty()
                         )
                     )
                 }
             }
         }
     }
-
-    fun fetchDailyWeatherFromDb() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val weatherDaily = weatherDailyRepository.getDailyWeatherFromDb()
-            withContext(Dispatchers.Main) {
-                if (weatherDaily.isNotEmpty()) {
-                    if (true) {
-                        weatherDailyRepository.deleteAllWeatherFromDb()
-                        getDailyWeatherFromApi()
-                    } else {
-                        _weatherDailyLiveData.postValue(
-                            State.success(
-                                weatherDaily
-                            )
-                        )
-                    }
-                } else getDailyWeatherFromApi()
-            }
-        }
-
-    }
-
-
 }

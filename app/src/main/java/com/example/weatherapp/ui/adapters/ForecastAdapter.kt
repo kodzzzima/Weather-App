@@ -21,13 +21,12 @@ class ForecastAdapter : RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder>
     class ForecastViewHolder(private val binding: ItemForecastHourlyBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(weatherHourlyEntity: WeatherHourlyEntity) {
-            binding.apply {
+            with(binding) {
                 itemTemperature.text = weatherHourlyEntity.temp?.roundTemperatureAndGetString()
                 itemIcon.setImageResource(weatherHourlyEntity.icon.convertToImageSource())
-                itemTime.text =  weatherHourlyEntity.dt.getTimeInHoursAndMinutes()
+                itemTime.text = weatherHourlyEntity.dt.getTimeInHoursAndMinutes()
             }
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ForecastViewHolder {
@@ -50,6 +49,4 @@ class ForecastAdapter : RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder>
         forecastList.addAll(newHourlyList)
         notifyDataSetChanged()
     }
-
-
 }

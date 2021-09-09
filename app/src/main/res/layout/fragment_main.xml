@@ -37,7 +37,7 @@
                 tools:ignore="ContentDescription" />
 
             <TextView
-                android:id="@+id/textViewToolbarTitle"
+                android:id="@+id/txt_toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
@@ -53,7 +53,7 @@
                 tools:text="Москва" />
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/input_find_city_weather"
+                android:id="@+id/txtfield_find_city_weather"
                 style="@style/SearchViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -83,7 +83,7 @@
     </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/layout_temperature_and_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -102,7 +102,7 @@
             android:visibility="gone" />
 
         <TextView
-            android:id="@+id/textView_temperature"
+            android:id="@+id/text_temperature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
@@ -112,7 +112,7 @@
             tools:text="2°" />
 
         <TextView
-            android:id="@+id/textView_description"
+            android:id="@+id/text_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
@@ -131,11 +131,11 @@
         android:backgroundTint="@android:color/transparent"
         app:cardCornerRadius="0dp"
         app:cardElevation="1dp"
-        app:layout_constraintBottom_toTopOf="@+id/three_days"
+        app:layout_constraintBottom_toTopOf="@+id/layout_three_days"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+        app:layout_constraintTop_toBottomOf="@+id/layout_temperature_and_description">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_hourly"
@@ -158,18 +158,18 @@
         android:text="@string/more_button"
         android:textColor="@color/white"
         android:textSize="15sp"
-        app:layout_constraintBottom_toTopOf="@+id/three_days"
+        app:layout_constraintBottom_toTopOf="@+id/layout_three_days"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <LinearLayout
-        android:id="@+id/three_days"
+        android:id="@+id/layout_three_days"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         android:layout_marginBottom="40dp"
         android:gravity="start"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@id/curr_wea_layout"
+        app:layout_constraintBottom_toTopOf="@id/cardview_current_weather"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
@@ -180,7 +180,7 @@
             android:gravity="center">
 
             <ImageView
-                android:id="@+id/today_icon"
+                android:id="@+id/img_today"
                 style="@style/item_weather_week_style"
                 android:layout_marginVertical="@dimen/item_weather_week_margin"
                 android:layout_marginEnd="@dimen/item_weather_week_margin"
@@ -193,7 +193,7 @@
                 tools:src="@drawable/ic_clear_sky" />
 
             <TextView
-                android:id="@+id/today_txt"
+                android:id="@+id/txt_today"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="15dp"
@@ -204,12 +204,12 @@
 
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/today_icon"
+                app:layout_constraintStart_toEndOf="@id/img_today"
                 app:layout_constraintTop_toTopOf="parent" />
 
 
             <TextView
-                android:id="@+id/today_description"
+                android:id="@+id/txt_today_description"
                 style="@style/item_weather_week_style"
                 android:layout_marginHorizontal="15dp"
                 android:layout_marginVertical="@dimen/item_weather_week_margin"
@@ -219,13 +219,13 @@
 
                 app:layout_constrainedWidth="true"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/today_temp_day"
-                app:layout_constraintStart_toEndOf="@+id/today_txt"
+                app:layout_constraintEnd_toStartOf="@id/txt_today_temp_day"
+                app:layout_constraintStart_toEndOf="@+id/txt_today"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Снегопад " />
 
             <TextView
-                android:id="@+id/today_temp_day"
+                android:id="@+id/txt_today_temp_day"
                 style="@style/item_weather_week_style"
                 android:layout_marginVertical="@dimen/item_weather_week_margin"
                 android:layout_marginEnd="@dimen/item_weather_week_margin"
@@ -245,12 +245,12 @@
                 android:text="@string/separator"
 
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/today_temp_night"
+                app:layout_constraintEnd_toStartOf="@id/txt_today_temp_night"
                 app:layout_constraintTop_toTopOf="parent" />
 
 
             <TextView
-                android:id="@+id/today_temp_night"
+                android:id="@+id/txt_today_temp_night"
                 style="@style/item_weather_week_style"
                 android:layout_marginVertical="@dimen/item_weather_week_margin"
                 android:layout_marginEnd="@dimen/item_weather_week_margin"
@@ -270,7 +270,7 @@
             android:gravity="center">
 
             <ImageView
-                android:id="@+id/tomorrow_icon"
+                android:id="@+id/img_tomorrow"
                 style="@style/item_weather_week_style"
                 android:layout_marginVertical="@dimen/item_weather_week_margin"
                 android:layout_marginEnd="@dimen/item_weather_week_margin"
@@ -283,7 +283,7 @@
                 tools:ignore="ContentDescription" />
 
             <TextView
-                android:id="@+id/tomorrow_txt"
+                android:id="@+id/txt_tomorrow"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="15dp"
@@ -294,12 +294,12 @@
 
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/tomorrow_icon"
+                app:layout_constraintStart_toEndOf="@id/img_tomorrow"
                 app:layout_constraintTop_toTopOf="parent" />
 
 
             <TextView
-                android:id="@+id/tomorrow_description"
+                android:id="@+id/txt_tomorrow_description"
                 style="@style/item_weather_week_style"
                 android:layout_marginHorizontal="15dp"
                 android:layout_marginVertical="@dimen/item_weather_week_margin"
@@ -309,13 +309,13 @@
 
                 app:layout_constrainedWidth="true"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/tomorrow_temp_day"
-                app:layout_constraintStart_toEndOf="@+id/tomorrow_txt"
+                app:layout_constraintEnd_toStartOf="@id/txt_tomorrow_temp_day"
+                app:layout_constraintStart_toEndOf="@+id/txt_tomorrow"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Снегопад " />
 
             <TextView
-                android:id="@+id/tomorrow_temp_day"
+                android:id="@+id/txt_tomorrow_temp_day"
                 style="@style/item_weather_week_style"
                 android:layout_marginVertical="@dimen/item_weather_week_margin"
                 android:layout_marginEnd="@dimen/item_weather_week_margin"
@@ -335,12 +335,12 @@
                 android:text="@string/separator"
 
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/tomorrow_temp_night"
+                app:layout_constraintEnd_toStartOf="@id/txt_tomorrow_temp_night"
                 app:layout_constraintTop_toTopOf="parent" />
 
 
             <TextView
-                android:id="@+id/tomorrow_temp_night"
+                android:id="@+id/txt_tomorrow_temp_night"
                 style="@style/item_weather_week_style"
                 android:layout_marginVertical="@dimen/item_weather_week_margin"
                 android:layout_marginEnd="@dimen/item_weather_week_margin"
@@ -361,7 +361,7 @@
             android:gravity="center">
 
             <ImageView
-                android:id="@+id/after_tomorrow_icon"
+                android:id="@+id/img_after_tomorrow"
                 style="@style/item_weather_week_style"
                 android:layout_marginVertical="@dimen/item_weather_week_margin"
                 android:layout_marginEnd="@dimen/item_weather_week_margin"
@@ -374,7 +374,7 @@
                 tools:ignore="ContentDescription" />
 
             <TextView
-                android:id="@+id/after_tomorrow_txt"
+                android:id="@+id/txt_after_tomorrow"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="15dp"
@@ -385,12 +385,12 @@
 
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/after_tomorrow_icon"
+                app:layout_constraintStart_toEndOf="@id/img_after_tomorrow"
                 app:layout_constraintTop_toTopOf="parent" />
 
 
             <TextView
-                android:id="@+id/after_tomorrow_description"
+                android:id="@+id/txt_after_tomorrow_description"
                 style="@style/item_weather_week_style"
                 android:layout_marginHorizontal="15dp"
                 android:layout_marginVertical="@dimen/item_weather_week_margin"
@@ -400,13 +400,13 @@
 
                 app:layout_constrainedWidth="true"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/after_tomorrow_temp_day"
-                app:layout_constraintStart_toEndOf="@+id/after_tomorrow_txt"
+                app:layout_constraintEnd_toStartOf="@id/txt_after_tomorrow_temp_day"
+                app:layout_constraintStart_toEndOf="@+id/txt_after_tomorrow"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Снегопад " />
 
             <TextView
-                android:id="@+id/after_tomorrow_temp_day"
+                android:id="@+id/txt_after_tomorrow_temp_day"
                 style="@style/item_weather_week_style"
                 android:layout_marginVertical="@dimen/item_weather_week_margin"
                 android:layout_marginEnd="@dimen/item_weather_week_margin"
@@ -426,12 +426,12 @@
                 android:text="@string/separator"
 
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/after_tomorrow_temp_night"
+                app:layout_constraintEnd_toStartOf="@id/txt_after_tomorrow_temp_night"
                 app:layout_constraintTop_toTopOf="parent" />
 
 
             <TextView
-                android:id="@+id/after_tomorrow_temp_night"
+                android:id="@+id/txt_after_tomorrow_temp_night"
                 style="@style/item_weather_week_style"
                 android:layout_marginVertical="@dimen/item_weather_week_margin"
                 android:layout_marginEnd="@dimen/item_weather_week_margin"
@@ -446,7 +446,7 @@
     </LinearLayout>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/curr_wea_layout"
+        android:id="@+id/cardview_current_weather"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="15dp"
@@ -482,7 +482,7 @@
                     android:textSize="15sp" />
 
                 <TextView
-                    android:id="@+id/feels_like_value"
+                    android:id="@+id/txt_feels_like_value"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -498,7 +498,7 @@
                     android:textSize="15sp" />
 
                 <TextView
-                    android:id="@+id/humidity_value"
+                    android:id="@+id/txt_humidity_value"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -522,7 +522,7 @@
                     android:textSize="15sp" />
 
                 <TextView
-                    android:id="@+id/pressure_value"
+                    android:id="@+id/txt_pressure_value"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -538,7 +538,7 @@
                     android:textSize="15sp" />
 
                 <TextView
-                    android:id="@+id/wind_speed_value"
+                    android:id="@+id/txt_wind_speed_value"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"

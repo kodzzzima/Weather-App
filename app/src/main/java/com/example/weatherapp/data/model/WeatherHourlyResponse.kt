@@ -15,7 +15,7 @@ data class WeatherHourlyResponse(
     val timezone: String,
     @SerializedName("timezone_offset")
     val timezone_offset: Int
-){
+) {
     @Keep
     data class Hourly(
         val clouds: Int,

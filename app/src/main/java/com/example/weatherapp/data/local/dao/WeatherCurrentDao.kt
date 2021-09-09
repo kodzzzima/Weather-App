@@ -14,5 +14,4 @@ interface WeatherCurrentDao {
 
     @Query("SELECT * FROM ${WeatherCurrentEntity.TABLE_NAME} WHERE cityName = :cityName")
     suspend fun getWeatherByCity(cityName: String): WeatherCurrentEntity?
-
 }

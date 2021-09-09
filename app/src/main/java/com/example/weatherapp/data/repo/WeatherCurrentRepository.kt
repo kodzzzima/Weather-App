@@ -10,7 +10,7 @@ import javax.inject.Inject
 class WeatherCurrentRepository @Inject constructor(
     private val api: WeatherApi,
     private val db: WeatherCurrentDao
-):SafeApiRequest() {
+) : SafeApiRequest() {
 
     suspend fun getWeatherFromApi(cityName: String): WeatherCurrentResponse = apiRequest {
         api.findCityWeatherData(cityName)

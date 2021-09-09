@@ -11,11 +11,12 @@ import javax.inject.Inject
 class WeatherHourlyRepository @Inject constructor(
     private val api: WeatherApi,
     private val db: WeatherHourlyDao,
-): SafeApiRequest() {
+) : SafeApiRequest() {
 
-    suspend fun getHourlyWeatherFromApi(lat:String, lon:String): WeatherHourlyResponse = apiRequest {
-        api.getCityForecastHourly(lat, lon)
-    }
+    suspend fun getHourlyWeatherFromApi(lat: String, lon: String): WeatherHourlyResponse =
+        apiRequest {
+            api.getCityForecastHourly(lat, lon)
+        }
 
     suspend fun getHourlyWeatherFromDb(): List<WeatherHourlyEntity> =
         db.getAllWeather()

@@ -11,11 +11,12 @@ import javax.inject.Inject
 class WeatherDailyRepository @Inject constructor(
     private val api: WeatherApi,
     private val db: WeatherDailyDao
-): SafeApiRequest() {
+) : SafeApiRequest() {
 
-    suspend fun getDailyWeatherFromApi(lat:String, lon:String): WeatherDailyResponse = apiRequest {
-        api.getCityWeatherDaily(lat, lon)
-    }
+    suspend fun getDailyWeatherFromApi(lat: String, lon: String): WeatherDailyResponse =
+        apiRequest {
+            api.getCityWeatherDaily(lat, lon)
+        }
 
     suspend fun getDailyWeatherFromDb(): List<WeatherDailyEntity> =
         db.getAllWeather()

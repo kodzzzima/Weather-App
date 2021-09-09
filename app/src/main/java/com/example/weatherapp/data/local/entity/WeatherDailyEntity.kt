@@ -5,15 +5,15 @@ import androidx.room.PrimaryKey
 
 
 @Entity(tableName = WeatherDailyEntity.TABLE_NAME)
-class WeatherDailyEntity(
+data class WeatherDailyEntity(
 
-    @PrimaryKey
-    var id: Int? = 0,
-    var tempDay: Double? = null,
-    var tempNight: Double? = null,
-    var icon: String? = null,
-    var description: String? = null,
-    var dt: Int? = null,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+    val tempDay: Double? = null,
+    val tempNight: Double? = null,
+    val icon: String? = null,
+    val description: String? = null,
+    val dt: Int? = null,
 ) {
     companion object {
         const val TABLE_NAME = "weather_daily"

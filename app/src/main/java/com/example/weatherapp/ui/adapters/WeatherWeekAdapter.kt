@@ -14,7 +14,7 @@ class WeatherWeekAdapter : RecyclerView.Adapter<WeatherWeekAdapter.WeatherWeekVi
     class WeatherWeekViewHolder(private val binding: ItemWeatherWeekBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(weatherDailyEntity: WeatherDailyEntity) {
-            binding.apply {
+            with(binding) {
                 txtDayOfWeek.text = weatherDailyEntity.dt.getDayOfWeek()
                 txtDayNumber.text = weatherDailyEntity.dt.getDayAndMonth()
                 txtTempDay.text = weatherDailyEntity.tempDay?.roundTemperatureAndGetString()

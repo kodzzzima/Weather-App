@@ -22,7 +22,7 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideRetrofit(okHttpClient: OkHttpClient, BASE_URL:String): Retrofit = Retrofit.Builder()
+    fun provideRetrofit(okHttpClient: OkHttpClient, BASE_URL: String): Retrofit = Retrofit.Builder()
         .addConverterFactory(GsonConverterFactory.create())
         .baseUrl(BASE_URL)
         .client(okHttpClient)
@@ -31,13 +31,13 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideOkHttpClient() = if (BuildConfig.DEBUG){
+    fun provideOkHttpClient() = if (BuildConfig.DEBUG) {
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
         OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
             .build()
-    }else{
+    } else {
         OkHttpClient
             .Builder()
             .build()

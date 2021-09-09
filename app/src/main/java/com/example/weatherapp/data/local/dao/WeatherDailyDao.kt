@@ -18,5 +18,4 @@ interface WeatherDailyDao {
 
     @Query("SELECT * FROM ${WeatherDailyEntity.TABLE_NAME}")
     suspend fun getAllWeather(): List<WeatherDailyEntity>
-
 }

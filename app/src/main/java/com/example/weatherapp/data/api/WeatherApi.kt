@@ -36,5 +36,5 @@ interface WeatherApi {
         @Query("exclude") exclude: String = Constants.Network.EXCLUDE_FOR_DAILY,
         @Query("units") units: String = Constants.Network.WEATHER_UNIT,
         @Query("appid") appid: String = Constants.Network.WEATHER_API_KEY
-    ):Response<WeatherDailyResponse>
+    ): Response<WeatherDailyResponse>
 }

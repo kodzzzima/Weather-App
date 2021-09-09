@@ -3,8 +3,8 @@ package com.example.weatherapp.ui.main
 import android.Manifest
 import android.annotation.SuppressLint
 import android.location.Geocoder
+import android.location.Location
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -30,15 +30,11 @@ import kotlin.math.roundToLong
 @AndroidEntryPoint
 class MainFragment : BindingFragment<FragmentMainBinding>(), EasyPermissions.PermissionCallbacks {
 
-    companion object {
-        const val PERMISSION_LOCATION_REQUEST_CODE = 1
-    }
-
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
     private val mainFragmentViewModel: MainFragmentViewModel by viewModels()
 
-    private lateinit var forecastAdapter: ForecastAdapter
+    private val forecastAdapter by lazy { ForecastAdapter() }
 
     override val bindingInflater: (LayoutInflater) -> ViewBinding
         get() = FragmentMainBinding::inflate
@@ -47,58 +43,49 @@ class MainFragment : BindingFragment<FragmentMainBinding>(), EasyPermissions.Per
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupUI()
+
+        observeAPICall()
+
         fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(requireContext())
 
         binding.btnLocation.setOnClickListener {
             if (hasLocationPermission()) {
                 fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
-                    val geoCoder = Geocoder(requireContext())
-                    val locationLat: Double = location.latitude
-                    val locationLon: Double = location.longitude
-                    val currentLocation = geoCoder.getFromLocation(
-                        locationLat,
-                        locationLon,
-                        1
-                    )
-                    mainFragmentViewModel.saveCityNameAndCoordinates(
-                        currentLocation.first().locality.toString(),
-                        locationLat.toString(),
-                        locationLon.toString()
-                    )
-                    fetchDataFromDatabases()
+                    getCityLocationByGeocoder(location)
                 }
             } else {
                 requestLocationPermission()
             }
         }
+    }
 
-        setupUI()
-        observeAPICall()
-
-        binding.btnSearch.setOnClickListener { showEditText() }
-
+    private fun getCityLocationByGeocoder(location: Location) {
+        val geoCoder = Geocoder(requireContext())
+        val locationLat: Double = location.latitude
+        val locationLon: Double = location.longitude
+        val currentLocation = geoCoder.getFromLocation(
+            locationLat,
+            locationLon,
+            1
+        )
+        val city = currentLocation.first().locality.toString()
+        mainFragmentViewModel.getCurrentWeatherFromApi(city)
+        mainFragmentViewModel.saveCityNameAndCoordinates(
+            city,
+            locationLat.toString(),
+            locationLon.toString()
+        )
     }
 
     private fun showEditText() {
-        binding.apply {
-            textViewToolbarTitle.visibility = View.GONE
+        with(binding) {
+            txtToolbarTitle.visibility = View.GONE
             btnSearch.visibility = View.GONE
             btnLocation.visibility = View.GONE
-            inputFindCityWeather.visibility = View.VISIBLE
+            txtfieldFindCityWeather.visibility = View.VISIBLE
         }
-    }
-
-    private fun updateUIWithApiCalls() {
-        mainFragmentViewModel.getCurrentWeatherFromApi(mainFragmentViewModel.cityPrefs)
-        mainFragmentViewModel.getHourlyWeatherFromApi(
-            mainFragmentViewModel.latPrefs,
-            mainFragmentViewModel.lonPrefs
-        )
-        mainFragmentViewModel.getDailyWeatherFromApi(
-            mainFragmentViewModel.latPrefs,
-            mainFragmentViewModel.lonPrefs
-        )
     }
 
     private fun fetchDataFromDatabases() {
@@ -119,13 +106,15 @@ class MainFragment : BindingFragment<FragmentMainBinding>(), EasyPermissions.Per
         initRecyclerView()
         fetchDataFromDatabases()
 
-        binding.textViewToolbarTitle.text = mainFragmentViewModel.cityPrefs
+        binding.btnSearch.setOnClickListener { showEditText() }
+
+        binding.txtToolbarTitle.text = mainFragmentViewModel.cityPrefs
 
         binding.btnMore.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_weatherWeekFragment)
         }
 
-        binding.inputFindCityWeather.setOnEditorActionListener { textView, id, _ ->
+        binding.txtfieldFindCityWeather.setOnEditorActionListener { textView, id, _ ->
             if (id == EditorInfo.IME_ACTION_DONE) {
                 if (textView.text.isNotEmpty()) {
                     mainFragmentViewModel.fetchCurrentWeatherFromDb((textView as EditText).text.toString())
@@ -138,17 +127,16 @@ class MainFragment : BindingFragment<FragmentMainBinding>(), EasyPermissions.Per
     }
 
     private fun hideEditText() {
-        binding.apply {
-            inputFindCityWeather.text?.clear()
-            textViewToolbarTitle.visibility = View.VISIBLE
+        with(binding) {
+            txtfieldFindCityWeather.text?.clear()
+            txtToolbarTitle.visibility = View.VISIBLE
             btnSearch.visibility = View.VISIBLE
             btnLocation.visibility = View.VISIBLE
-            inputFindCityWeather.visibility = View.GONE
+            txtfieldFindCityWeather.visibility = View.GONE
         }
     }
 
     private fun initRecyclerView() {
-        forecastAdapter = ForecastAdapter()
         val mLayoutManager = LinearLayoutManager(
             context,
             LinearLayoutManager.HORIZONTAL,
@@ -187,35 +175,34 @@ class MainFragment : BindingFragment<FragmentMainBinding>(), EasyPermissions.Per
                 }
                 is State.Success -> {
                     state.data.let { weatherDaily ->
-                        binding.apply {
-                            todayDescription.text =
+                        with(binding) {
+                            txtTodayDescription.text =
                                 weatherDaily[0].description?.titleCaseFirstChar()
-                            todayTempDay.text =
+                            txtTodayTempDay.text =
                                 weatherDaily[0].tempDay?.roundTemperatureAndGetString()
-                            todayTempNight.text =
+                            txtTodayTempNight.text =
                                 weatherDaily[0].tempNight?.roundTemperatureAndGetString()
-                            todayIcon.setImageResource(weatherDaily[0].icon.convertToImageSource())
+                            imgToday.setImageResource(weatherDaily[0].icon.convertToImageSource())
 
-                            tomorrowDescription.text =
+                            txtTomorrowDescription.text =
                                 weatherDaily[1].description?.titleCaseFirstChar()
-                            tomorrowTempDay.text =
+                            txtTomorrowTempDay.text =
                                 weatherDaily[1].tempDay?.roundTemperatureAndGetString()
-                            tomorrowTempNight.text =
+                            txtTomorrowTempNight.text =
                                 weatherDaily[1].tempNight?.roundTemperatureAndGetString()
-                            tomorrowIcon.setImageResource(weatherDaily[1].icon.convertToImageSource())
+                            imgTomorrow.setImageResource(weatherDaily[1].icon.convertToImageSource())
 
-                            afterTomorrowDescription.text =
+                            txtAfterTomorrowDescription.text =
                                 weatherDaily[2].description?.titleCaseFirstChar()
-                            afterTomorrowTempDay.text =
+                            txtAfterTomorrowTempDay.text =
                                 weatherDaily[2].tempDay?.roundTemperatureAndGetString()
-                            afterTomorrowTempNight.text =
+                            txtAfterTomorrowTempNight.text =
                                 weatherDaily[2].tempNight?.roundTemperatureAndGetString()
-                            afterTomorrowIcon.setImageResource(weatherDaily[2].icon.convertToImageSource())
+                            imgAfterTomorrow.setImageResource(weatherDaily[2].icon.convertToImageSource())
                         }
                     }
                 }
                 is State.Error -> {
-                    Log.d("testLog", state.message)
                     Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
                 }
             }
@@ -233,7 +220,6 @@ class MainFragment : BindingFragment<FragmentMainBinding>(), EasyPermissions.Per
                     }
                 }
                 is State.Error -> {
-                    Log.d("testLog", state.message)
                     Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
                 }
             }
@@ -247,36 +233,36 @@ class MainFragment : BindingFragment<FragmentMainBinding>(), EasyPermissions.Per
             when (state) {
                 is State.Loading -> {
                     binding.progressBar.visibility = View.VISIBLE
-                    binding.textViewTemperature.visibility = View.GONE
-                    binding.textViewDescription.visibility = View.GONE
+                    binding.textTemperature.visibility = View.GONE
+                    binding.textDescription.visibility = View.GONE
                 }
                 is State.Success -> {
-
                     state.data.let { weatherDetail ->
-                        binding.apply {
-                            binding.progressBar.visibility = View.GONE
-                            binding.textViewTemperature.visibility = View.VISIBLE
-                            binding.textViewDescription.visibility = View.VISIBLE
+                        with(binding) {
 
-                            textViewToolbarTitle.text =
+                            binding.progressBar.visibility = View.GONE
+                            binding.textTemperature.visibility = View.VISIBLE
+                            binding.textDescription.visibility = View.VISIBLE
+
+                            txtToolbarTitle.text =
                                 weatherDetail.cityName
 
-                            textViewTemperature.text =
+                            textTemperature.text =
                                 weatherDetail.temp?.roundTemperatureAndGetString()
 
-                            feelsLikeValue.text =
+                            txtFeelsLikeValue.text =
                                 weatherDetail.feelsLike?.roundTemperatureAndGetString()
 
-                            textViewDescription.text =
+                            textDescription.text =
                                 weatherDetail.description?.titleCaseFirstChar()
 
-                            pressureValue.text =
+                            txtPressureValue.text =
                                 weatherDetail.pressure.pressureConvertToMM()
 
-                            humidityValue.text =
+                            txtHumidityValue.text =
                                 weatherDetail.humidity.toString() + "%"
 
-                            windSpeedValue.text =
+                            txtWindSpeedValue.text =
                                 weatherDetail.wind_speed?.roundToLong().toString() + " м/c"
                         }
                     }
@@ -321,6 +307,10 @@ class MainFragment : BindingFragment<FragmentMainBinding>(), EasyPermissions.Per
     }
 
     override fun onPermissionsGranted(requestCode: Int, perms: List<String>) {}
+
+    companion object {
+        const val PERMISSION_LOCATION_REQUEST_CODE = 1
+    }
 
 }
 

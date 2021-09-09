@@ -10,7 +10,7 @@ import com.example.weatherapp.data.local.entity.WeatherCurrentEntity
 import com.example.weatherapp.data.local.entity.WeatherHourlyEntity
 
 @Database(
-    entities = [WeatherCurrentEntity::class,WeatherHourlyEntity::class,WeatherDailyEntity::class],
+    entities = [WeatherCurrentEntity::class, WeatherHourlyEntity::class, WeatherDailyEntity::class],
     version = 1
 )
 abstract class WeatherDatabase : RoomDatabase() {
