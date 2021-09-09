@@ -63,8 +63,8 @@ class MainFragment : BindingFragment<FragmentMainBinding>(), EasyPermissions.Per
                     )
                     mainFragmentViewModel.saveCityNameAndCoordinates(
                         currentLocation.first().locality.toString(),
-                        locationLat,
-                        locationLon
+                        locationLat.toString(),
+                        locationLon.toString()
                     )
                     updateUI()
                 }
@@ -83,6 +83,18 @@ class MainFragment : BindingFragment<FragmentMainBinding>(), EasyPermissions.Per
                 inputFindCityWeather.visibility = View.VISIBLE
             }
         }
+    }
+
+    private fun updateUIWithApiCalls() {
+        mainFragmentViewModel.getCurrentWeatherFromApi(mainFragmentViewModel.cityPrefs)
+        mainFragmentViewModel.getHourlyWeatherFromApi(
+            mainFragmentViewModel.latPrefs,
+            mainFragmentViewModel.lonPrefs
+        )
+        mainFragmentViewModel.getDailyWeatherFromApi(
+            mainFragmentViewModel.latPrefs,
+            mainFragmentViewModel.lonPrefs
+        )
     }
 
     private fun updateUI() {
@@ -111,7 +123,9 @@ class MainFragment : BindingFragment<FragmentMainBinding>(), EasyPermissions.Per
 
         binding.inputFindCityWeather.setOnEditorActionListener { textView, id, _ ->
             if (id == EditorInfo.IME_ACTION_DONE) {
-                mainFragmentViewModel.fetchCurrentWeatherFromDb((textView as EditText).text.toString())
+                if (textView.text.isNotEmpty()) {
+                    mainFragmentViewModel.fetchCurrentWeatherFromDb((textView as EditText).text.toString())
+                }
                 binding.apply {
                     inputFindCityWeather.text?.clear()
                     textViewToolbarTitle.visibility = View.VISIBLE
@@ -145,6 +159,17 @@ class MainFragment : BindingFragment<FragmentMainBinding>(), EasyPermissions.Per
         observeCurrentWeather()
         observeWeatherDaily()
         observeWeatherHourly()
+
+        observeLatLonChanges()
+    }
+
+    private fun observeLatLonChanges() {
+        mainFragmentViewModel.latAndLonLiveData.observe(viewLifecycleOwner, {
+            val lat = it[0]
+            val lon = it[1]
+            mainFragmentViewModel.getDailyWeatherFromApi(lat, lon)
+            mainFragmentViewModel.getHourlyWeatherFromApi(lat, lon)
+        })
     }
 
     private fun observeWeatherDaily() {
@@ -182,8 +207,8 @@ class MainFragment : BindingFragment<FragmentMainBinding>(), EasyPermissions.Per
                     }
                 }
                 is State.Error -> {
-                    Log.d("testLog",state.message)
-                    Toast.makeText(requireContext(),state.message,Toast.LENGTH_SHORT).show()
+                    Log.d("testLog", state.message)
+                    Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
                 }
             }
         })
@@ -200,8 +225,8 @@ class MainFragment : BindingFragment<FragmentMainBinding>(), EasyPermissions.Per
                     }
                 }
                 is State.Error -> {
-                    Log.d("testLog",state.message)
-                    Toast.makeText(requireContext(),state.message,Toast.LENGTH_SHORT).show()
+                    Log.d("testLog", state.message)
+                    Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -241,7 +266,7 @@ class MainFragment : BindingFragment<FragmentMainBinding>(), EasyPermissions.Per
                     }
                 }
                 is State.Error -> {
-                    Toast.makeText(requireContext(),state.message,Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
                 }
             }
         })

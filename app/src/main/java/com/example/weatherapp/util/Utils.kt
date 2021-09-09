@@ -46,7 +46,7 @@ object Utils {
         pressure = weatherResponse.main.pressure,
         humidity = weatherResponse.main.humidity,
         wind_speed = weatherResponse.wind.speed,
-        dateTime = getCurrentDateTime(Constants.Time.DATE_FORMAT_FULL)
+        dateTime = weatherResponse.dt.toString()
     )
 
     fun convertWeatherDailyToEntity(

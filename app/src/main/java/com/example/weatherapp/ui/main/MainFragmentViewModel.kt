@@ -58,6 +58,11 @@ class MainFragmentViewModel @Inject internal constructor(
 
     private lateinit var weatherHourlyResponse: WeatherHourlyResponse
 
+    private val _latAndLonLiveData =
+        MutableLiveData<List<String>>()
+    val latAndLonLiveData: LiveData<List<String>>
+        get() = _latAndLonLiveData
+
     var latPrefs: String? =
         sharedPreferences.getString(Constants.Preferences.LAT, Constants.Preferences.LAT_DEFAULT)
     var lonPrefs: String? =
@@ -65,10 +70,17 @@ class MainFragmentViewModel @Inject internal constructor(
     var cityPrefs: String? =
         sharedPreferences.getString(Constants.Preferences.CITY, Constants.Preferences.CITY_DEFAULT)
     var datePrefs: String? =
-        sharedPreferences.getString(Constants.Preferences.CITY, Constants.Preferences.CITY_DEFAULT)
+        sharedPreferences.getString(Constants.Preferences.DATE, Utils.getCurrentDateTime(Constants.Time.DATE_FORMAT_FULL))
+
+    private fun saveLastResponseTime() {
+        sharedPreferences.edit().putString(
+            Constants.Preferences.DATE,
+            Utils.getCurrentDateTime(Constants.Time.DATE_FORMAT_FULL)
+        ).apply()
+    }
 
 
-    private fun getCurrentWeatherFromApi(cityName: String?) {
+    fun getCurrentWeatherFromApi(cityName: String?) {
         _currentWeatherLiveData.postValue(State.loading())
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -77,16 +89,17 @@ class MainFragmentViewModel @Inject internal constructor(
                         it
                     )
                 }!!
-
+                saveLastResponseTime()
                 saveCityNameAndCoordinates(
                     cityName,
-                    weatherCurrentResponse.coord.lat,
-                    weatherCurrentResponse.coord.lon)
+                    weatherCurrentResponse.coord.lat.toString(),
+                    weatherCurrentResponse.coord.lon.toString()
+                )
 
                 withContext(Dispatchers.Main) {
                     val currentWeatherEntity =
                         convertCurrentWeatherResponseToEntity(weatherCurrentResponse)
-                    Log.d("testLog",currentWeatherEntity.dateTime.toString() + "dada")
+                    Log.d("testLog", currentWeatherEntity.dateTime.toString() + "dada")
                     weatherCurrentRepository.addCurrentWeatherToDb(currentWeatherEntity)
                     _currentWeatherLiveData.postValue(
                         State.success(
@@ -114,7 +127,7 @@ class MainFragmentViewModel @Inject internal constructor(
         }
     }
 
-    private fun getDailyWeatherFromApi(lat: String?, lon: String?) {
+    fun getDailyWeatherFromApi(lat: String?, lon: String?) {
         _weatherDailyLiveData.postValue(State.loading())
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -150,7 +163,8 @@ class MainFragmentViewModel @Inject internal constructor(
             }
         }
     }
-    private fun getHourlyWeatherFromApi(lat:String?, lon:String?) {
+
+    fun getHourlyWeatherFromApi(lat: String?, lon: String?) {
         _weatherHourlyLiveData.postValue(State.loading())
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -186,20 +200,20 @@ class MainFragmentViewModel @Inject internal constructor(
             }
         }
     }
+
     fun fetchDailyWeatherFromDb(lat: String?, lon: String?) {
         viewModelScope.launch(Dispatchers.IO) {
             val weatherDaily = weatherDailyRepository.getDailyWeatherFromDb()
             withContext(Dispatchers.Main) {
                 if (weatherDaily.isNotEmpty()) {
+                    _weatherDailyLiveData.postValue(
+                        State.success(
+                            weatherDaily
+                        )
+                    )
                     if (true) {
                         weatherDailyRepository.deleteAllWeatherFromDb()
                         getDailyWeatherFromApi(lat, lon)
-                    } else {
-                        _weatherDailyLiveData.postValue(
-                            State.success(
-                                weatherDaily
-                            )
-                        )
                     }
                 } else getDailyWeatherFromApi(lat, lon)
             }
@@ -207,24 +221,19 @@ class MainFragmentViewModel @Inject internal constructor(
 
     }
 
-
-
-
-
     fun fetchHourlyWeatherFromDb(lat: String?, lon: String?) {
         viewModelScope.launch(Dispatchers.IO) {
             val weatherHourly = weatherHourlyRepository.getHourlyWeatherFromDb()
             withContext(Dispatchers.Main) {
                 if (weatherHourly.isNotEmpty()) {
+                    _weatherHourlyLiveData.postValue(
+                        State.success(
+                            weatherHourly
+                        )
+                    )
                     if (true) {
                         weatherHourlyRepository.deleteAllWeatherFromDb()
                         getHourlyWeatherFromApi(lat, lon)
-                    } else {
-                        _weatherHourlyLiveData.postValue(
-                            State.success(
-                                weatherHourly
-                            )
-                        )
                     }
                 } else getHourlyWeatherFromApi(lat, lon)
             }
@@ -233,27 +242,24 @@ class MainFragmentViewModel @Inject internal constructor(
 
 
 
-    fun saveCityNameAndCoordinates(city: String, lat: Double, lon: Double) {
-        sharedPreferences.edit().putString(Constants.Preferences.CITY, city).apply()
-        sharedPreferences.edit().putString(Constants.Preferences.LAT, lat.toString()).apply()
-        sharedPreferences.edit().putString(Constants.Preferences.LON, lon.toString()).apply()
-    }
 
     fun fetchCurrentWeatherFromDb(cityName: String?) {
         viewModelScope.launch(Dispatchers.IO) {
-            val currentWeather = cityName?.let { weatherCurrentRepository.getCurrentWeatherFromDb(it) }
+            val currentWeather =
+                cityName?.let { weatherCurrentRepository.getCurrentWeatherFromDb(it) }
             withContext(Dispatchers.Main) {
                 if (currentWeather != null) {
-                    if (Utils.isTimeValid(currentWeather.dateTime)) {
-                        getCurrentWeatherFromApi(cityName)
-                    } else {
-                        _currentWeatherLiveData.postValue(
-                            State.success(
-                                currentWeather
-                            )
+                    Log.d("testLog",datePrefs.toString())
+                    _currentWeatherLiveData.postValue(
+                        State.success(
+                            currentWeather
                         )
+                    )
+                    if (Utils.isTimeValid(datePrefs)) {
+                        Log.d("testLog",datePrefs.toString())
+                        Log.d("testLog","valid")
+                        getCurrentWeatherFromApi(cityName)
                     }
-
                 } else {
                     getCurrentWeatherFromApi(cityName)
                 }
@@ -261,4 +267,17 @@ class MainFragmentViewModel @Inject internal constructor(
         }
     }
 
+    fun saveCityNameAndCoordinates(city: String, lat: String, lon: String) {
+        sharedPreferences.edit().putString(Constants.Preferences.CITY, city).apply()
+        sharedPreferences.edit().putString(Constants.Preferences.LAT, lat).apply()
+        sharedPreferences.edit().putString(Constants.Preferences.LON, lon).apply()
+
+        updateLatLonLiveData(lat,lon)
     }
+
+    private fun updateLatLonLiveData(lat: String, lon: String) {
+        val listOfLatLon = listOf(lat,lon)
+        _latAndLonLiveData.postValue(listOfLatLon)
+
+    }
+}
