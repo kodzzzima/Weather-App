@@ -76,13 +76,16 @@ class MainFragment : BindingFragment<FragmentMainBinding>(), EasyPermissions.Per
         setupUI()
         observeAPICall()
 
+        binding.btnSearch.setOnClickListener { showEditText() }
+
+    }
+
+    private fun showEditText() {
         binding.apply {
-            btnSearch.setOnClickListener {
-                textViewToolbarTitle.visibility = View.GONE
-                btnSearch.visibility = View.GONE
-                btnLocation.visibility = View.GONE
-                inputFindCityWeather.visibility = View.VISIBLE
-            }
+            textViewToolbarTitle.visibility = View.GONE
+            btnSearch.visibility = View.GONE
+            btnLocation.visibility = View.GONE
+            inputFindCityWeather.visibility = View.VISIBLE
         }
     }
 
@@ -127,17 +130,21 @@ class MainFragment : BindingFragment<FragmentMainBinding>(), EasyPermissions.Per
                 if (textView.text.isNotEmpty()) {
                     mainFragmentViewModel.fetchCurrentWeatherFromDb((textView as EditText).text.toString())
                 }
-                binding.apply {
-                    inputFindCityWeather.text?.clear()
-                    textViewToolbarTitle.visibility = View.VISIBLE
-                    btnSearch.visibility = View.VISIBLE
-                    btnLocation.visibility = View.VISIBLE
-                    inputFindCityWeather.visibility = View.GONE
-                }
+                hideEditText()
             }
             false
         }
 
+    }
+
+    private fun hideEditText() {
+        binding.apply {
+            inputFindCityWeather.text?.clear()
+            textViewToolbarTitle.visibility = View.VISIBLE
+            btnSearch.visibility = View.VISIBLE
+            btnLocation.visibility = View.VISIBLE
+            inputFindCityWeather.visibility = View.GONE
+        }
     }
 
     private fun initRecyclerView() {
