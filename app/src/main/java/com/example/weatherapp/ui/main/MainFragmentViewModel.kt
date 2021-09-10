@@ -57,13 +57,6 @@ class MainFragmentViewModel @Inject internal constructor(
     val cityPrefs: String? =
         sharedPreferences.getString(Constants.Preferences.CITY, Constants.Preferences.CITY_DEFAULT)
 
-    private fun saveLastResponseTime() {
-        sharedPreferences.edit().putString(
-            Constants.Preferences.DATE,
-            Utils.getCurrentDateTime(Constants.Time.DATE_FORMAT_FULL)
-        ).apply()
-    }
-
     fun getCurrentWeatherFromApi(cityName: String?) {
         _currentWeatherLiveData.postValue(State.loading())
         viewModelScope.launch(Dispatchers.IO) {
@@ -188,6 +181,31 @@ class MainFragmentViewModel @Inject internal constructor(
         }
     }
 
+    fun fetchCurrentWeatherFromDb(cityName: String?) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val currentWeather =
+                cityName?.let { weatherCurrentRepository.getCurrentWeatherFromDb(it) }
+            withContext(Dispatchers.Main) {
+                if (currentWeather != null) {
+                    _currentWeatherLiveData.postValue(
+                        State.success(
+                            currentWeather
+                        )
+                    )
+                    val savedTime = sharedPreferences.getString(
+                        Constants.Preferences.DATE,
+                        ""
+                    )
+                    if (Utils.isTimeExpired(savedTime)) {
+                        getCurrentWeatherFromApi(cityName)
+                    }
+                } else {
+                    getCurrentWeatherFromApi(cityName)
+                }
+            }
+        }
+    }
+
     fun fetchDailyWeatherFromDb(lat: String?, lon: String?) {
         viewModelScope.launch(Dispatchers.IO) {
             val weatherDaily = weatherDailyRepository.getDailyWeatherFromDb()
@@ -235,38 +253,19 @@ class MainFragmentViewModel @Inject internal constructor(
         }
     }
 
-
-    fun fetchCurrentWeatherFromDb(cityName: String?) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val currentWeather =
-                cityName?.let { weatherCurrentRepository.getCurrentWeatherFromDb(it) }
-            withContext(Dispatchers.Main) {
-                if (currentWeather != null) {
-                    _currentWeatherLiveData.postValue(
-                        State.success(
-                            currentWeather
-                        )
-                    )
-                    val savedTime = sharedPreferences.getString(
-                        Constants.Preferences.DATE,
-                        ""
-                    )
-                    if (Utils.isTimeExpired(savedTime)) {
-                        getCurrentWeatherFromApi(cityName)
-                    }
-                } else {
-                    getCurrentWeatherFromApi(cityName)
-                }
-            }
-        }
-    }
-
     fun saveCityNameAndCoordinates(city: String, lat: String, lon: String) {
         sharedPreferences.edit().putString(Constants.Preferences.CITY, city).apply()
         sharedPreferences.edit().putString(Constants.Preferences.LAT, lat).apply()
         sharedPreferences.edit().putString(Constants.Preferences.LON, lon).apply()
 
         updateLatLonLiveData(lat, lon)
+    }
+
+    private fun saveLastResponseTime() {
+        sharedPreferences.edit().putString(
+            Constants.Preferences.DATE,
+            Utils.getCurrentDateTime(Constants.Time.DATE_FORMAT_FULL)
+        ).apply()
     }
 
     private fun updateLatLonLiveData(lat: String, lon: String) {

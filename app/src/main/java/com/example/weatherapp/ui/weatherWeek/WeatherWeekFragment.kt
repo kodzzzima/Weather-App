@@ -36,11 +36,11 @@ class WeatherWeekFragment : BindingFragment<FragmentWeatherWeekBinding>() {
             when (state) {
                 is State.Loading -> {
                     binding.progressBar.visibility = View.VISIBLE
-                    binding.cardView.visibility = View.GONE
+                    binding.cardviewRecycler.visibility = View.GONE
                 }
                 is State.Success -> {
                     binding.progressBar.visibility = View.GONE
-                    binding.cardView.visibility = View.VISIBLE
+                    binding.cardviewRecycler.visibility = View.VISIBLE
                     state.data.let { weatherDaily ->
                         weatherWeekAdapter.setData(weatherDaily)
                     }

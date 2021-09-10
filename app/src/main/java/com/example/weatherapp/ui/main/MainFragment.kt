@@ -79,15 +79,6 @@ class MainFragment : BindingFragment<FragmentMainBinding>(), EasyPermissions.Per
         )
     }
 
-    private fun showEditText() {
-        with(binding) {
-            txtToolbarTitle.visibility = View.GONE
-            btnSearch.visibility = View.GONE
-            btnLocation.visibility = View.GONE
-            txtfieldFindCityWeather.visibility = View.VISIBLE
-        }
-    }
-
     private fun fetchDataFromDatabases() {
         mainFragmentViewModel.fetchCurrentWeatherFromDb(
             mainFragmentViewModel.cityPrefs
@@ -126,16 +117,6 @@ class MainFragment : BindingFragment<FragmentMainBinding>(), EasyPermissions.Per
 
     }
 
-    private fun hideEditText() {
-        with(binding) {
-            txtfieldFindCityWeather.text?.clear()
-            txtToolbarTitle.visibility = View.VISIBLE
-            btnSearch.visibility = View.VISIBLE
-            btnLocation.visibility = View.VISIBLE
-            txtfieldFindCityWeather.visibility = View.GONE
-        }
-    }
-
     private fun initRecyclerView() {
         val mLayoutManager = LinearLayoutManager(
             context,
@@ -149,7 +130,6 @@ class MainFragment : BindingFragment<FragmentMainBinding>(), EasyPermissions.Per
         }
 
     }
-
 
     private fun observeAPICall() {
         observeCurrentWeather()
@@ -272,6 +252,25 @@ class MainFragment : BindingFragment<FragmentMainBinding>(), EasyPermissions.Per
                 }
             }
         })
+    }
+
+    private fun showEditText() {
+        with(binding) {
+            txtToolbarTitle.visibility = View.GONE
+            btnSearch.visibility = View.GONE
+            btnLocation.visibility = View.GONE
+            txtfieldFindCityWeather.visibility = View.VISIBLE
+        }
+    }
+
+    private fun hideEditText() {
+        with(binding) {
+            txtfieldFindCityWeather.text?.clear()
+            txtToolbarTitle.visibility = View.VISIBLE
+            btnSearch.visibility = View.VISIBLE
+            btnLocation.visibility = View.VISIBLE
+            txtfieldFindCityWeather.visibility = View.GONE
+        }
     }
 
     private fun hasLocationPermission() =
